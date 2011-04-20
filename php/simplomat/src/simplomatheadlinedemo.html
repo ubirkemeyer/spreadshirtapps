@@ -1,0 +1,337 @@
+<html>
+<head>
+    <title>Simplomat News Headline Demo</title>
+    <style type="text/css">
+    body, div, p, td, form, input, select, textarea {
+        font: 12px Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    .appearanceSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .sizeSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .price {
+        position:absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold; 
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 5px;
+        left: 500px;
+        width: 300px;
+    }
+
+    .appearances {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        width: 450px;
+    }
+
+    .menu {
+        position:absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .designer {
+        position:absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+     }
+
+    .submitButton {
+        right: 10px;
+        bottom: 10px;
+        width: 150px;
+        position: absolute; 
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .newsBox {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 250px;
+        height: 500px;
+        background-color: white;
+        /* for IE */
+        filter:alpha(opacity=60);
+        /* CSS3 standard */
+        opacity:0.6;
+    }
+    .newsBox h1 {
+        font-size: 25px;
+        font-weight: bold;
+        margin-left: 8px;
+        margin-bottom: 0px;
+    }
+     .newsEntry {
+        font-size: 15px;
+        margin-top: 5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 5px;
+         padding-top: 3px;
+         padding-bottom: 5px;
+        cursor: pointer;
+        border-top: 1px solid black;
+     }
+
+     .newsEntryLink {
+         text-decoration: none;
+         color: black;
+     }
+
+    .newsStoryLink {
+         color: black;
+        font-size: 11px;
+     }
+
+    .newsStoryLink a:hover {
+         color: orange;
+     }
+
+    .newsStoryLink a:visited {
+         color: lightgray;
+     }
+
+     .newsEntry a:hover {
+         text-decoration: none;
+         color: orange;
+     }
+
+     .selectedEntry {
+         font-weight: bold;
+         color: orange;
+     }
+     .toggleNews {
+         position: absolute;
+        right: 5px;
+        top: 5px;
+        font-size: 12px;
+         text-decoration: underline;
+         cursor: pointer;
+     }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/feedreader.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script type="text/javascript" src="js/ext/Anzeigen_400.font.js"></script>
+    <script>
+        var feedReader = null;
+        var spreadshirtAPI = null;
+        var simplomat = null;
+        var text = null;
+        var design = null;
+        var currentSize = null;
+        var currentAppearance = null;
+        var currentHeadline = null;
+        var text = null;
+        var design = null;
+        var synchronized = false;
+        var newsVisible = true;
+
+        window.onload = function () {
+            feedReader = new FeedReader("http://blog.spreadshirt.net/uk/feed/", true);
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            simplomat = new Simplomat();
+            simplomat.initCallback = function() {
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                $("#appearances").html("");
+                for (var i = 0; i < this.product.appearances.length; i++) {
+                    var appearance = this.product.appearances[i];
+                    $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" +  appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+                }
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+            };
+            simplomat.priceChangedCallback = function() {
+                $("#price").html(this.product.getFormatedPrice());
+            };
+            simplomat.sizeChangedCallback = function() {
+                if (currentSize != null)
+                    $('#size_' + currentSize).removeClass('selected');
+                currentSize = simplomat.product.sizeId;
+                $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.appearanceChangedCallback = function() {
+                if (currentAppearance != null)
+                    $('#appearance_' + currentAppearance).removeClass('selected');
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected'); 
+
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                if (currentSize != null && $('#size_' + currentSize) != null)
+                    $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.errorCallback = function(errorCode, errorMessage) {
+                alert(errorMessage);
+            };
+            simplomat.init("designer", 1000, spreadshirtAPI, false, false, null, "6", "1", null, "flock", -20, -20, 980, 500);
+            initNews();
+            selectText('0');
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+
+         function selectText(id) {
+            if (!synchronized) {
+                synchronized = true;
+                if (currentHeadline != null && $("#headline_" + currentHeadline) != null)
+                     $("#headline_" + currentHeadline).removeClass('selectedEntry');
+                if (text != null)
+                    text.remove();
+                if (design != null)
+                    design.remove();
+                simplomat.product.currentView.addTextAndLayout($("#headline_" + id).text(), 3, 80, 50, 109, 25, "#000000", true, function() {
+                    this.moveToRelativePosition(50, 25);
+                    text = this;
+                });
+                simplomat.product.currentView.addDesign(null, "4868344", true, ["#008751"], function() {
+                    this.zoom(-0.8);
+                    this.moveToPositionRelativeTo(text, "below", "right", 10);
+                    design = this;
+                    synchronized = false;
+                });
+                currentHeadline = id;
+                $('#headline_' + currentHeadline).addClass('selectedEntry');
+            }
+        }
+
+        function initNews()
+        {
+            var newsBox = $('#newsBox');
+            var i = 0;
+            var feedXML = feedReader.readRss();
+            newsBox.html("");
+            newsBox.append("<h1>" + feedXML.children("channel").children("title").text()  + " News</h1>");        
+            feedXML.children("channel").children("item").each(function() {
+                if (i < 8) {
+                    var item = $(this);
+                    newsBox.append("<div class=\"newsEntry\"><a id=\"headline_" + i + "\"  class=\"newsEntryLink\" href=\"javascript:selectText('" + i + "');\">" + item.children("title").text() + "</a>&nbsp;<a class=\"newsStoryLink\" href=\"" + item.children("link").text() + "\">read story</a></div>");
+                    i++;
+                }
+                });
+        }
+
+        function toggleNews() {
+            if (newsVisible) {
+                $('#newsBox').hide();
+                $('#toggleNews').text("Show");
+                newsVisible = false;
+            } else {
+                $('#newsBox').show();
+                $('#toggleNews').text("Hide");
+                newsVisible = true;
+            }
+
+        }
+    </script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!" onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+    <div id="newsBox" class="newsBox"></div>
+    <div id="toggleNews" class="toggleNews" onclick="javascript:toggleNews();">Hide</div>
+</div>
+</body>
+</html>

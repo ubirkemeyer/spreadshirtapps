@@ -1,0 +1,212 @@
+<html>
+<head>
+    <title>Simplomat Twittershirts Demo</title>
+    <style type="text/css">
+    body, div, p, td, form, input, select, textarea {
+        font: 12px Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    .appearanceSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .sizeSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .price {
+        position:absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 5px;
+        left: 500px;
+        width: 300px;
+    }
+
+    .appearances {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        width: 450px;
+    }
+
+    .menu {
+        position:absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .designer {
+        position:absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+     }
+
+    .submitButton {
+        right: 10px;
+        bottom: 10px;
+        width: 150px;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/feedreader.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script type="text/javascript" src="js/ext/Anzeigen_400.font.js"></script>
+    <script>
+        var spreadshirtAPI = null;
+        var simplomat = null;
+        var currentSize = null;
+        var currentAppearance = null;
+        var design = null;
+        var synchronized = false;
+        var initId = null;
+
+        window.onload = function () {
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            simplomat = new Simplomat();
+            simplomat.initCallback = function() {
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                $("#appearances").html("");
+                for (var i = 0; i < this.product.appearances.length; i++) {
+                    var appearance = this.product.appearances[i];
+                    $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" +  appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+                }
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+            };
+            simplomat.priceChangedCallback = function() {
+                $("#price").html(this.product.getFormatedPrice());
+            };
+            simplomat.sizeChangedCallback = function() {
+                if (currentSize != null)
+                    $('#size_' + currentSize).removeClass('selected');
+                currentSize = simplomat.product.sizeId;
+                $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.appearanceChangedCallback = function() {
+                if (currentAppearance != null)
+                    $('#appearance_' + currentAppearance).removeClass('selected');
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                if (currentSize != null && $('#size_' + currentSize) != null)
+                    $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.errorCallback = function(errorCode, errorMessage) {
+                alert(errorMessage);
+            };
+            simplomat.init("designer", 750, spreadshirtAPI, false, false, null, "6", "1", null, "digi", 10, -35, 980, 500);
+
+            simplomat.product.currentView.addDesign("img/twitterfollowers.png", null, true);
+
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!" onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

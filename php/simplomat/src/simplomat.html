@@ -1,0 +1,443 @@
+<html>
+<head>
+<title>Simplomat</title>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/ext/raphael.js"></script>
+<script type="text/javascript" src="js/spreadshirtapi.js"></script>
+<script type="text/javascript" src="js/simplomat.js"></script>
+<script type="text/javascript" src="js/customsimplomat.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+<script type="text/javascript" src="js/picasa.js"></script>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-size: 75%;
+        color: #222;
+        background: #ffffff;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.6em;
+    }
+
+    .ui-tabs-hide {
+        display: none;
+    }
+
+    .widget {
+        width: 360px;
+        height: 570px;
+        margin: 20px;
+        background: #f3f1eb;
+        border: 1px solid #dedbd1;
+        margin-bottom: 15px;
+        margin-left: 605px;
+        position: absolute;
+    }
+
+    .tabnav {
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .tabnav li {
+        display: inline;
+        list-style: none;
+        padding-right: 5px;
+    }
+
+    .tabnav li a {
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #222;
+        font-weight: bold;
+        padding: 4px 6px;
+        outline: none;
+    }
+
+    .tabnav li a:hover, .tabnav li a:active, .tabnav li.ui-tabs-selected a {
+        background: #dedbd1;
+        color: #222;
+        text-decoration: none;
+    }
+
+    .tabdiv {
+        margin: 0px 10px 10px 10px;
+        background: #fff;
+        border: 1px solid #dedbd1;
+        padding: 5px;
+        height: 520px;
+        overflow: hidden;
+    }
+
+    .tabdiv li {
+        margin-left: 20px;
+    }
+</style>
+<script>
+    var spreadshirtAPI;
+    var picasaAPI;
+    var simplomat;
+    var designSearchController;
+    var productTypeSearchController;
+    var picasaLoginController;
+    var picasaSearchController;
+    var picasaUserImageController;
+
+    window.onload = function () {
+        spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+        picasaAPI = new PicasaAPI();
+        simplomat = new CustomSimplomat().init("designer", 600, spreadshirtAPI, true, true, null, "6", null, null, "digi");
+        designSearchController = new SearchController("design", "designSearchController", 36,
+                function (query, offset, limit) {
+                    var designs = spreadshirtAPI.getMarketplaceDesigns(offset, limit, query);
+                    var count = (designs == null) ? 0 : designs.attr("count");
+                    var searchResult = new SearchResult(query, count, offset, limit, new Array());
+                    if (designs != null) {
+                        designs.children("design").each(function () {
+                            var design = $(this);
+                            searchResult.entries.push(new SearchResultEntry(
+                                    design.attr("xlink:href").substr(design.attr("xlink:href").lastIndexOf("/") + 1),
+                                    design.children("name") != null ? design.children("name").text() : "",
+                                    design.children("description") != null ? design.children("description").text() : "",
+                                    design.children("resources").children("resource").attr("xlink:href") + "?width=50&height=50&backgroundColor=none",
+                                    50, 50,
+                                    design.children("resources").children("resource").attr("xlink:href")));
+                        });
+                    }
+                    return searchResult;
+                },
+                function (entry) {
+                    simplomat.product.currentView.addDesignById(entry.id);
+                    var design = spreadshirtAPI.getDesign(entry.id);
+                    if (design != null) {
+                        var tagElement = design.children("tags");
+                        if (tagElement != null) {
+                            var tags = tagElement.text().split(",");
+                            var tagDiv = $('#designSearchTags');
+                            tagDiv.html("");
+                            tagDiv.append("Tags:&nbsp;");
+                            for (var i in tags) {
+                                tagDiv.append("<a href=\"javascript:designSearchController.refineSearch('" + $.trim(tags[i]) + "');\">" + $.trim(tags[i]) + "</a> ");
+                            }
+                        }
+                    } else {
+                        $('#designSearchTags').html("Tags: -");
+                    }
+                },
+                null,
+                function () {
+                    if (!simplomat.pixelAllowed) {
+                        this.executedQuery += " +vector:(true)";
+                    }
+                },
+                null, null, null, null);
+        designSearchController.spreadshirtAPI = this.spreadshirtAPI;
+        designSearchController.addUserFilter = function() {
+            if (this.currentEntry != null) {
+                var design = this.spreadshirtAPI.getDesign(this.currentEntry.id);
+                if (design != null)
+                    this.refineSearch("+userIds:(" + design.children("user").attr("id") + ")");
+            }
+        };
+        designSearchController.conductSearch();
+
+        productTypeSearchController = new SearchController("productType", "productTypeSearchController", 54,
+                function (query, offset, limit) {
+                    if (this.entries === null) {
+                        var entries = new Array(); 
+                        var count = 0;
+                        var productTypes = spreadshirtAPI.getProductTypes(0, 1000, true);
+                        if (productTypes != null) {
+                            productTypes.children("productType").each(function () {
+                                var productType = $(this);
+                                var appearances = simplomat.product.productPartsFactory.createAppearances(productType);
+                                var views = simplomat.product.productPartsFactory.createViews(productType);
+                                if (views.length > 0 && appearances.length > 0) {
+                                    entries.push(new SearchResultEntry(
+                                        productType.attr("xlink:href").substr(productType.attr("xlink:href").lastIndexOf("/") + 1),
+                                        productType.children("name") != null ? productType.children("name").text() : "",
+                                        productType.children("description") != null ? productType.children("description").text() : "",
+                                        productType.children("resources").children("resource").attr("xlink:href") + "?width=50&height=50&backgroundColor=none",
+                                        50, 50,
+                                        productType.children("resources").children("resource").attr("xlink:href")));
+                                    count++;
+                                }
+                            });
+                        }
+                        this.count = count;
+                        this.entries = entries;
+                    }                                        
+                    var searchResult = new SearchResult(query, this.count, offset, limit, new Array());
+                    for (var i = 0; i < this.entries.length; i++) {
+                        if (i >= offset && i < limit) {
+                            searchResult.entries.push(this.entries[i]);
+                        }
+                    }
+                    return searchResult;
+                },
+                function (entry) {
+                     simplomat.product.changeProductType(entry.id);                    
+                },
+                null, null, null, null, null, null);
+        productTypeSearchController.count = null;
+        productTypeSearchController.entries = null;
+        productTypeSearchController.conductSearch();
+
+        picasaSearchController = new SearchController("picasaSearch", "picasaSearchController", 20,
+                function (query, offset, limit) {
+                    var feed = picasaAPI.getCommunityImages(query, offset, limit);
+                    var searchResult = null;
+                    if (feed == null) {
+                        searchResult = new SearchResult(query, 0, 0, limit, new Array());
+                    } else {
+                        var countNode = feed.children("[nodeName=openSearch:totalResults]");
+                        var count = (countNode == null) ? 0 : feed.children("[nodeName=openSearch:totalResults]").text();
+                        searchResult = new SearchResult(query, count, offset, limit, new Array());
+                        var i = 0;
+                        feed.children("entry").each(function () {
+                            var entry = $(this);
+                            var thumbnail = $(this).children("[nodeName=media:group]").children("[nodeName=media:thumbnail]");
+                            var src = $(this).children("[nodeName=content]");
+                            searchResult.entries.push(new SearchResultEntry("" + i, "", "",
+                                    thumbnail.attr("url"), Number(thumbnail.attr("width")),
+                                    Number(thumbnail.attr("height")),
+                                    src.attr("src")));
+                            i++;
+                        });
+                    }
+                    return searchResult;
+                },
+                function (entry) {
+                    simplomat.product.currentView.addDesign(entry.imageUrl);
+                },
+                function () {
+                    $("#picasaSearch").show();
+                    $("#picasaUser").hide();
+                }, null, null, null, null, null);
+
+        picasaUserImageController = new SearchController("picasaUser", "picasaUserImageController", 16,
+                function (query, offset, limit) {
+                    var feed = null;
+                    var user = query != undefined && query != null && query != "" ? query : 'default';
+                    if (this.album != undefined && this.album != null)
+                        feed = picasaAPI.getImages(user, this.album, offset, limit);
+                    else
+                        feed = picasaAPI.getUploadedImages(user, offset, limit);
+                    var searchResult = null;
+                    if (feed == null) {
+                        searchResult = new SearchResult(query, 0, 0, limit, new Array());
+                    } else {
+                        var countNode = feed.children("[nodeName=openSearch:totalResults]");
+                        var count = (countNode == null) ? 0 : feed.children("[nodeName=openSearch:totalResults]").text();
+                        searchResult = new SearchResult(query, count, offset, limit, new Array());
+                        var i = 0;
+                        feed.children("entry").each(function () {
+                            var entry = $(this);
+                            var thumbnail = $(this).children("[nodeName=media:group]").children("[nodeName=media:thumbnail]");
+                            var src = $(this).children("[nodeName=content]");
+                            searchResult.entries.push(new SearchResultEntry("" + i, "", "",
+                                    thumbnail.attr("url"), Number(thumbnail.attr("width")),
+                                    Number(thumbnail.attr("height")),
+                                    src.attr("src")));
+                            i++;
+                        });
+                    }
+                    return searchResult;
+                },
+                function (entry) {
+                    simplomat.product.currentView.addDesign(entry.imageUrl);
+                },
+                function () {
+                    $("#picasaSearch").hide();
+                    $("#picasaUser").show();
+
+                    var albums = picasaAPI.getAlbums(this.getCurrentQuery());
+                    var picasaUserAlbums = $("#picasaUserAlbums");
+                    picasaUserAlbums.html("Albums: ");
+                    if (albums != null) {
+                        albums.children("entry").each(function() {
+                            var title = $(this).children("[nodeName=title]");
+                            var album = $(this).children("[nodeName=gphoto:id]");
+                            if (title != null && album != null)
+                                picasaUserAlbums.append("<a href=\"javascript:picasaUserImageController.setAlbum('" + album.text() + "')\">" + title.text() + "</a>&nbsp;");
+                        });
+                    }
+                },
+                null, null, null, null, null);
+        picasaUserImageController.setAlbum = function(album) {
+            this.album = album;
+            this.conductSearch();
+        };
+
+        picasaLoginController = new PicasaLoginController(picasaAPI, function () {
+            $("#picasaLogin").text("");
+            $("#picasaMenu").show();
+             $("#tabs").tabs('select', '#tabs-3');
+            picasaSearchController.conductSearch();
+        });
+
+        picasaLoginController.initPicasa();
+        setTimeout(function () {
+            simplomat.R.safari();
+        });
+    };
+    $(function() {
+            $("#tabs").tabs();
+            $("#tabs").tabs('select', '#tabs-1');
+        });
+</script>
+
+</head>
+<body>
+<div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  50px; width: 41px;"/></div>
+<div style="position: absolute; left: 55px; height: 70px; padding-top: 15px; font-size: 20px; ">Spreadshirt Simplomat Demo</div>
+<div style="position: absolute; top: 40px; width: 980px; height: 600px;">
+    <div style="position: absolute; width: 600px;">
+        <div id="designer">&nbsp;</div>
+    </div>
+
+    <div id="tabs" class="widget">
+        <ul class="tabnav">
+            <li><a href="#tabs-1">Designs</a></li>
+            <li><a href="#tabs-2">Product Types</a></li>
+            <li><a href="#tabs-3">Picasa Images</a></li>
+        </ul>
+        <div id="tabs-1" class="tabdiv">
+            <b>Search on Spreadshirt Marketplace</b>
+
+            <form id="designSearchForm" style="margin: 0px;">
+                <input id="designSearchField" type="input" style="width: 260px;"/>
+                <input id="designSearchButton" type="button" style="width: 60px;"
+                       value="Search"/>
+            </form>
+            <a href="javascript:designSearchController.addUserFilter();">More from designer</a>
+
+            <div id="designSearchTags"
+                 style="width: 100%; font-size: 12px; overflow: auto; height: 65px; margin-top: 5px;">
+                Tags: -</div>
+            <div style="margin-top: 5px;">
+                <div style="float: left; width: 70px; margin-left: 5px;"><a id="designSearchPrevious"
+                                                          style="display:none;">Previous</a>&nbsp;
+                </div>
+                <div style="float: left; width: 170px; text-align: center;"
+                     id="designSearchCount">&nbsp;</div>
+                <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                        id="designSearchNext" style="display:none;">Next</a></div>
+            </div>
+            <div id="designSearchResult"
+                 style="clear: left; width: 100%; display: none;">
+                <div style="width: 50px; height: 50px;  margin: 1px; float: left; border: 1px solid #ccc;">
+                    <img id="#id#" src="#src#" width="#width#" height="#height#"
+                         onclick=""
+                         style="border: 0px; cursor: pointer;"/></div>
+            </div>
+        </div>
+        <div id="tabs-2" class="tabdiv">
+                    <form id="productTypeSearchForm" style="margin: 0px; display: none;">
+                        <input id="productTypeSearchField" type="input"
+                               style="width: 260px;"/>
+                        <input id="productTypeSearchButton" type="button"
+                               style="width: 60px;" value="Search"/>
+                    </form>
+                    <div style="margin-top: 5px;">
+                        <div style="float: left; width: 70px; margin-left: 5px;"><a
+                                id="productTypeSearchPrevious"
+                                style="display:none;">Previous</a>&nbsp;</div>
+                        <div style="float: left; width: 170px; text-align: center;"
+                             id="productTypeSearchCount">&nbsp;</div>
+                        <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                                id="productTypeSearchNext" style="display:none;">Next</a>
+                        </div>
+                    </div>
+                    <div id="productTypeSearchResult" style="width: 100%;">
+                        <div style="float:left; width: 50px; height: 50px; margin: 1px; float: left; border: 1px solid #ccc;">
+                            <img id="#id#" src="#src#" width="#width#" height="#height#"
+                                 onclick="" style="border: 0px; cursor: pointer;"/></div>
+                    </div>
+        </div>
+        <div id="tabs-3" class="tabdiv">
+            <div style="clear: left;">
+                <div id="picasaLogin">
+                    <a href="https://www.google.com/accounts/AuthSubRequest?scope=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&session=1&secure=0&next=http%3A%2F%2Flocalhost%2Fsimplomat%2Fsimplomat.html">Connect
+                        to Picasa</a>
+                </div>
+                <div id="picasaMenu" style="display: none;">
+                    <b>Picasa Images</b>&nbsp;<a
+                        href="javascript:picasaUserImageController.conductSearch();">User&nbsp;Images</a>&nbsp;
+                    <a href="javascript:picasaSearchController.conductSearch();">Search</a>&nbsp;
+                </div>
+                <div id="picasaUser" style="width: 100%; display: none;">
+                    <form id="picasaUserSearchForm" style="margin: 0px;">
+                        <input id="picasaUserSearchField" type="input"
+                               style="width: 260px;"/>
+                        <input id="picasaUserSearchButton" type="submit"
+                               style="width: 60px;"
+                               value="Switch"/>
+                    </form>
+                    <div id="picasaUserAlbums"
+                         style="width: 100%; overflow: auto; height: 60px; margin-top: 5px;">
+                        &nbsp;</div>
+                    <div style="margin-top: 5px;">
+                        <div style="float: left; width: 70px; margin-left: 5px;"><a
+                                id="picasaUserSearchPrevious"
+                                style="display:none;">Previous</a>&nbsp;</div>
+                        <div style="float: left; width: 170px; text-align: center;"
+                             id="picasaUserSearchCount">&nbsp;</div>
+                        <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                                id="picasaUserSearchNext"
+                                style="display:none;">Next</a></div>
+                    </div>
+                    <div id="picasaUserSearchResult" style="width: 100%;">
+                        <div style="float:left; width: 74px; height: 74px; padding: 0px; margin: 3px; text-align: center; border: 1px solid #ccc;">
+                            <img id="#id#" src="#src#" width="#width#" height="#height#"
+                                 onclick="" style="border: 0px; cursor: pointer;"/></div>
+                    </div>
+                </div>
+                <div id="picasaSearch" style="width: 100%; display:none;">
+                    <form id="picasaSearchSearchForm" style="margin: 0px;">
+                        <input id="picasaSearchSearchField" type="input"
+                               style="width: 260px;"/>
+                        <input id="picasaSearchSearchButton" type="button"
+                               style="width: 60px;" value="Search"/>
+                    </form>
+                    <div style="margin-top: 5px;">
+                        <div style="float: left; width: 70px; margin-left: 5px;"><a
+                                id="picasaSearchSearchPrevious"
+                                style="display:none;">Previous</a>&nbsp;</div>
+                        <div style="float: left; width: 170px; text-align: center;"
+                             id="picasaSearchSearchCount">&nbsp;</div>
+                        <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                                id="picasaSearchSearchNext" style="display:none;">Next</a>
+                        </div>
+                    </div>
+                    <div id="picasaSearchSearchResult" style="width: 100%;">
+                        <div style="float:left; width: 74px; height: 74px; padding: 0px; margin: 3px; text-align: center; border: 1px solid #ccc;">
+                            <img id="#id#" src="#src#" width="#width#" height="#height#"
+                                 onclick="" style="border: 0px; cursor: pointer;"/></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="position: absolute; margin-top: 620px; width: 1200px; display: none;">
+    <input type="button" value="Show Product XML"
+           onclick="$('#productXML').text(simplomat.getProductXML());"/>
+    <input type="button" value="Create Product"
+           onclick="$('#productXML').text(simplomat.createProduct());"/>
+    <input type="button" value="Show Basket Item XML"
+           onclick="$('#productXML').text(simplomat.getBasketItemXML());"/>
+    <input type="button" value="Checkout"
+           onclick="simplomat.product.changeSize(simplomat.product.getAvailableSizes()[0]); simplomat.createProductAndCheckout();"/><br/>
+    <textarea id="productXML" rows="20" style="width: 100%;" readonly></textarea>
+</div>
+</body>
+</html>

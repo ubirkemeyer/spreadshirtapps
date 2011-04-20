@@ -1,0 +1,2 @@
+-utf8 text issue
+-improve image quality

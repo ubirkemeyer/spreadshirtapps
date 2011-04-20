@@ -1,0 +1,6 @@
+update Data
+-- Diese und die folgenden Zeilen werden ignoriert --
+
+M    src/main/scala/net/sprd/shop/snippet/ShopArticles.scala
+M    src/main/scala/bootstrap/liftweb/Boot.scala
+M    src/main/webapp/articles.html

@@ -1,0 +1,29 @@
+<lift:surround with="default" at="content">
+  <lift:zitate.head />
+  <!--<h2><lift:zitate.title /></h2>-->
+  <div id="json_result"></div>
+  <table>
+  <lift:zitate.formlist>
+        <tr>
+            <td>
+                <zitate:image />
+            </td> 
+            <td> 
+                <zitate:name /><br />
+                <zitate:price /><br />
+                <zitate:varianceHidden />
+                <zitate:variances >
+                    <zitate:variance />
+                </zitate:variances >
+                <br />
+                <zitate:sizes >
+                    <sizes:size />
+                </zitate:sizes >
+                <br />
+                <zitate:buy /> <zitate:next />
+            </td>
+        </tr>
+  </lift:zitate.formlist >
+  </table>
+</lift:surround>
+

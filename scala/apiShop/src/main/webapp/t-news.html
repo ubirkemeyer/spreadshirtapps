@@ -1,0 +1,40 @@
+<lift:surround with="default" at="content">
+  <lift:shopArticles.head />
+  <lift:shopHeader.init />
+  <script src="/jqCarousel3D.js" type="text/javascript"/>
+  <div id="carouselthreed" style="
+       position:relative;
+       left:-150px;top:0px;">
+       <lift:shopArticles.texts source="lvz">
+           <articles:image />
+       </lift:shopArticles.texts>
+ </div>
+  <script type="text/javascript">
+      $(document).ready(function(){
+$('#carouselthreed').carousel3D({
+autorotate: true,
+autorotatespeed: 500,
+speed: 3000,
+perspectiveZoom: 70,
+sideOffset: 190,
+secondaryOpacity: .35,
+emClass:'articlesImage'
+})
+});
+      
+  </script>
+
+  <p>
+<lift:shopArticles.newsDetails >
+      <div id="divarticle" style="
+       position:relative;
+       left:650px;top:125px;width:400px;
+        padding:16px;
+        ">
+ </div>
+    </lift:shopArticles.newsDetails >
+ <!-- <h4><lift:shopArticles.count /> Articles</h4>-->
+  <div id="json_result"></div>
+</p>
+</lift:surround>
+

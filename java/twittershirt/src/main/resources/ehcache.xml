@@ -1,0 +1,37 @@
+<ehcache>
+    <defaultCache maxElementsInMemory="2000"
+                  eternal="false"
+                  timeToIdleSeconds="86410"
+                  timeToLiveSeconds="86400"
+                  memoryStoreEvictionPolicy="LRU"/>
+   <cache name="followers"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="users"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="printType"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="productType"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="shop"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="currency"
+           maxElementsInMemory="2000"
+           timeToIdleSeconds="86410"
+           timeToLiveSeconds="86400"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>

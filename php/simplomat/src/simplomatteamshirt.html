@@ -1,0 +1,481 @@
+<html>
+<head>
+    <title>Simplomat Team Shirt Demo</title>
+    <style type="text/css">
+    body, div, p, td, form, input, select, textarea {
+        font: 12px Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    .appearanceSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .viewSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 75px;
+        height: 75px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .sizeSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .styleSelector {
+            margin: 4px;
+            border: black solid 2px;
+            float: left;
+            width: 90px;
+            height: 30px;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+
+    .price {
+        position:absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .styles {
+        position: absolute;
+        top: 5px;
+        left: 200px;
+        width: 250px;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 50px;
+        left: 520px;
+        width: 300px;
+    }
+
+    .appearances {
+        position: absolute;
+        top: 5px;
+        left: 520px;
+        width: 300px;
+    }
+
+    .views {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        width: 450px;
+    }
+
+    .menu {
+        position:absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .designer {
+        position:absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+     }
+
+    .submitButton {
+        right: 10px;
+        bottom: 10px;
+        width: 150px;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .toolBox {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 260px;
+        height: 500px;
+        background-color: white;
+        overflow: hidden;
+        /* for IE */
+        filter:alpha(opacity=80);
+        /* CSS3 standard */
+        opacity:0.8;
+    }
+    .toolBox h1 {
+        font-size: 25px;
+        font-weight: bold;
+        margin-left: 8px;
+        margin-bottom: 0px;
+    }
+     .toolBoxEntry {
+        font-size: 15px;
+        margin-top: 5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 1px;
+        padding-top: 3px;
+        padding-bottom: 5px;
+        cursor: pointer;
+        float: left;
+     }
+
+     .toolBoxEntryLink {
+        text-decoration: none;
+        color: black;
+     }
+
+    .toolBoxEntryStoryLink {
+        color: black;
+        font-size: 11px;
+     }
+
+    .toolBoxEntryStoryLink a:hover {
+         color: orange;
+     }
+
+    .toolBoxEntryStoryLink a:visited {
+         color: lightgray;
+     }
+
+     .toolBoxEntry a:hover {
+         text-decoration: none;
+         color: orange;
+     }
+
+     .selectedEntry {
+         font-weight: bold;
+         color: orange;
+     }
+    .toolBox h1 {
+        margin-left: 0px;
+        margin-bottom: 5px;
+    }
+    .toolBox b {
+        font-size: 18px;
+    }
+    .toolBox input {
+        margin-top: 3px;
+        margin-bottom: 5px;
+        border: 1px solid black;
+        font-size: 18px;
+        width: 250px;
+    }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/feedreader.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script type="text/javascript" src="js/ext/Anzeigen_400.font.js"></script>
+    <script type="text/javascript" src="js/ext/AtomaticLT_500.font.js"></script>
+    <script type="text/javascript" src="js/ext/PrincetownLetPlain_500.font.js"></script>
+    <script type="text/javascript" src="js/ext/Braille_400.font.js"></script>
+    <script>
+        var spreadshirtAPI = null;
+        var simplomat = null;
+        var currentSize = null;
+        var currentAppearance = null;
+        var currentView = null;
+        var synchronized = false;
+        var styles = new Array();
+        var currentStyle = null;
+        var currentStyleId = null;
+
+        window.onload = function () {
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            simplomat = new Simplomat();
+            simplomat.initCallback = function() {
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                $("#appearances").html("");
+                for (var i = 0; i < this.product.appearances.length; i++) {
+                    var appearance = this.product.appearances[i];
+                    $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" +  appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+                }
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+
+                renderViews();
+                currentView = simplomat.product.viewId;
+                $('#view_' + currentView).addClass('selected');
+            };
+            simplomat.priceChangedCallback = function() {
+                $("#price").html(this.product.getFormatedPrice());
+            };
+            simplomat.sizeChangedCallback = function() {
+                if (currentSize != null)
+                    $('#size_' + currentSize).removeClass('selected');
+                currentSize = simplomat.product.sizeId;
+                $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.viewChangedCallback = function() {
+                if (currentView != null)
+                    $('#view_' + currentView).removeClass('selected');
+                currentView = simplomat.product.viewId;
+                $('#view_' + currentView).addClass('selected');
+            };
+            simplomat.appearanceChangedCallback = function() {
+                if (currentAppearance != null)
+                    $('#appearance_' + currentAppearance).removeClass('selected');
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                if (currentSize != null && $('#size_' + currentSize) != null)
+                    $('#size_' + currentSize).addClass('selected');
+
+                renderViews();
+                if (currentView != null && $('#view_' + currentView) != null)
+                    $('#view_' + currentView).addClass('selected');
+            };
+            simplomat.errorCallback = function(errorCode, errorMessage) {
+                alert(errorMessage);
+            };
+            simplomat.init("designer", 900, spreadshirtAPI, false, false, null, "436", "209", "2", "flock", -20, -20, 980, 500);
+            initStyles();
+            updateShirt();
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+
+        function renderViews() {
+            $("#views").html("");
+                for (var i = 0; i < simplomat.product.views.length; i++) {
+                    var view = simplomat.product.views[i];
+                    if (view.id == "1" || view.id == "2") {
+                        $("#views").append("<img id=\"view_" + view.id + "\" class=\"viewSelector\" onclick=\"javascript:simplomat.product.changeView('" +  view.id + "')\" src=\"" + simplomat.product.createViewImageUrl(view.id, simplomat.product.appearanceId, 75) + "\" width=\"75\" height=\"75\"/>");
+                    }
+                }
+        }
+
+        function initStyles()
+        {
+            var standard = new Object();
+            standard.name = "Standard";
+            standard.numberFontFamilyId = 50;
+            standard.numberFontId = 109;
+            standard.numberFrontFontSize = 70;
+            standard.numberBackFontSize = 200;
+            standard.textFontFamilyId = 50;
+            standard.textFontId = 109;
+            standard.teamNameFontSize = 40;
+            standard.playerNameFontSize = 40;
+            styles.push(standard);
+
+            var college = new Object();
+            college.name = "College";
+            college.numberFontFamilyId = 65;
+            college.numberFontId = 97;
+            college.numberFrontFontSize = 70;
+            college.numberBackFontSize = 200;
+            college.textFontFamilyId = 50;
+            college.textFontId = 109;
+            college.teamNameFontSize = 40;
+            college.playerNameFontSize = 40;
+            styles.push(college);
+
+            var space = new Object();
+            space.name = "Space";
+            space.numberFontFamilyId = 60;
+            space.numberFontId = 92;
+            space.numberFrontFontSize = 70;
+            space.numberBackFontSize = 160;
+            space.textFontFamilyId = 50;
+            space.textFontId = 109;
+            space.teamNameFontSize = 40;
+            space.playerNameFontSize = 40;
+            styles.push(space);
+
+            var space = new Object();
+            space.name = "Blind";
+            space.numberFontFamilyId = 39;
+            space.numberFontId = 61;
+            space.numberFrontFontSize = 70;
+            space.numberBackFontSize = 200;
+            space.textFontFamilyId = 50;
+            space.textFontId = 109;
+            space.teamNameFontSize = 40;
+            space.playerNameFontSize = 40;
+            styles.push(space);
+
+            $("#styles").html("");
+            for (var i = 0; i < styles.length; i++) {
+                var style = styles[i];
+                $("#styles").append("<div id=\"style_" + i + "\" class=\"styleSelector\" onclick=\"javascript:selectStyle('" + i + "')\">" + style.name + "</div>");
+            }
+            selectStyle(0);
+        }
+
+        function selectStyle(i) {
+            if (currentStyle != null)
+                $('#style_' + currentStyleId).removeClass('selected');
+            currentStyle = styles[i];
+            currentStyleId = i;
+            $('#style_' + currentStyleId).addClass('selected');
+            updateShirt();
+        }
+
+        function updateShirt() {
+            var playerName = $("#playerName").val();
+            var teamName = $("#teamName").val();
+            var number = $("#number").val();
+
+            simplomat.product.removeAll();
+            if (number != "") {
+                simplomat.product.getView("1").addText(number, currentStyle.numberFontFamilyId,
+                        currentStyle.numberFontId, currentStyle.numberFrontFontSize, "#FFFFFF", true, function() {
+                        this.moveToRelativePosition(75, 10);
+                    });
+            }
+            var text = null;
+            if (playerName != "") {
+                simplomat.product.getView("2").addText(playerName, currentStyle.textFontFamilyId,
+                        currentStyle.textFontId, currentStyle.playerNameFontSize, "#FFFFFF", true, function() {
+                        text = this;
+                        this.moveToRelativePosition(50, 13);
+                    });
+            }
+            if (number != "") {
+                if (text == null)
+                    simplomat.product.getView("2").addText(number, currentStyle.numberFontFamilyId,
+                        currentStyle.numberFontId, currentStyle.numberBackFontSize, "#FFFFFF", true, function() {
+                        text = this;
+                        this.moveToRelativePosition(50, 38);
+                    });
+                else
+                    text.addTextLine(number, currentStyle.numberFontFamilyId,
+                        currentStyle.numberFontId, currentStyle.numberBackFontSize, "#FFFFFF", true, function() {
+                        text = this;
+                        var textLine = this.textLines[this.textLines.length-1];
+                        textLine.moveToRelativePosition(50, 38);
+                    });
+            }
+            if (teamName != "") {
+                if (text == null)
+                    simplomat.product.getView("2").addText(teamName, currentStyle.textFontFamilyId,
+                        currentStyle.textFontId, currentStyle.teamNameFontSize, "#FFFFFF", true, function() {
+                        text = this;
+                        this.moveToRelativePosition(50, 64);
+                    });
+                else
+                    text.addTextLine(teamName, currentStyle.textFontFamilyId,
+                        currentStyle.textFontId, currentStyle.teamNameFontSize, "#FFFFFF", true, function() {
+                        text = this;
+                        var textLine = this.textLines[this.textLines.length-1];
+                        textLine.moveToRelativePosition(50, 64);
+                    });
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="views" class="views"></div>
+            <div id="styles" class="styles"></div>
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!" onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+    <div id="toolBox" class="toolBox">
+        <h1>Your Team Shirt</h1>
+        <b>Your Team</b><br/>
+        <input type="text" value="team name" id="teamName" onkeyup="javascript:updateShirt();" onchange="javascript:updateShirt();"/><br/>
+        <b>Your Name</b><br/>
+        <input type="text" value="player name" id="playerName" onkeyup="javascript:updateShirt();" onchange="javascript:updateShirt();"/><br/>
+        <b>Number</b><br/>
+        <input type="text" value="11" id="number" onkeyup="javascript:updateShirt();" onchange="javascript:updateShirt();"/><br/>
+    </div>
+</div>
+</body>
+</html>

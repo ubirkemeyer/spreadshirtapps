@@ -1,0 +1,36 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="95"/>
+    <appearance id="2"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="text">
+            <printArea id="154"/>
+            <printType id="14"/>
+            <offset unit="mm">
+                <x>1.0</x>
+                <y>1.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <text transform="" font-style="normal" font-size="36"
+                          font-weight="normal" font-family="Stop"
+                          text-anchor="start" y="50" x="30" printColorId="12">
+                        <tspan printColorId="17">Techno</tspan>
+                        <tspan y="90" x="30" printColorId="165" font-style="normal"
+                               font-size="36" font-weight="normal" font-family="Braille">Techno</tspan>
+                        <tspan y="130" x="30" printColorId="87" font-style="normal"
+                               font-size="36" font-weight="normal" font-family="Arial">Techno</tspan>
+                        <tspan y="170" x="30" printColorId="167" font-style="normal"
+                               font-size="36" font-weight="normal" font-family="AnzeigenGroteskLT">Techno</tspan>
+                    </text>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>

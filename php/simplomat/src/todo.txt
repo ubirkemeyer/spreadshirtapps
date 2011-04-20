@@ -1,0 +1,20 @@
+-default positioning
+-switch product type
+-load product
+-dpi issue
+-switch print type
+
+-remember uploaded designs in customer session
+-update basket issues
+
+-delete button
+-move up/ move down button
+-image loader
+-product creation loader
+-list default colors
+
+-issues -> curl apache_request_headers ....
+-fopen
+-next/previous issues ...
+-add controller
+-add views

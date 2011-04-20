@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <author>
+        <name>Martin Breest</name>
+    </author>
+    <title>Himmel, Himmel, Himmel</title>
+    <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+    <updated>2010-09-23T12:00:00Z</updated>
+
+    <entry>
+        <title>Himmel Blau Wolken</title>
+        <link href="extimg/himmel_blau_wolken.jpg"/>
+        <thumbnail href="extimg/himmel_blau_wolken.jpg" width="72" height="49"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+    <entry>
+        <title>Himmel Bunt</title>
+        <link href="extimg/himmel_bunt.jpg"/>
+        <thumbnail href="extimg/himmel_bunt.jpg" width="72" height="48"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa61</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+    <entry>
+        <title>Himmel Dunkelrot</title>
+        <link href="extimg/himmel_dunkelrot.jpg"/>
+        <thumbnail href="extimg/himmel_dunkelrot.jpg" width="72" height="48"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa62</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+    <entry>
+        <title>Himmel Fenster</title>
+        <link href="extimg/himmel_fenster.jpg"/>
+        <thumbnail href="extimg/himmel_fenster.jpg" width="72" height="72"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa63</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+    <entry>
+        <title>Himmel Gott</title>
+        <link href="extimg/himmel_gott.jpg"/>
+        <thumbnail href="extimg/himmel_gott.jpg" width="72" height="54"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa64</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+    <entry>
+        <title>Himmel Strand</title>
+        <link href="extimg/himmel_strand.jpg"/>
+        <thumbnail href="extimg/himmel_strand.jpg" width="72" height="48"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa65</id>
+        <updated>2010-09-23T12:00:00Z</updated>
+        <summary>Himmel</summary>
+        <content>Himmel</content>
+    </entry>
+</feed>

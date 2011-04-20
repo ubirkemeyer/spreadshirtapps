@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<basketItem xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns="http://api.spreadshirt.net">
+   <!-- optional for mixed mode -->
+   <!--shop id="40000"/-->
+   <quantity>1</quantity>
+   <element type="sprd:article" xlink:href="xxx">
+      <properties>
+         <property key="appearance">xxx</property>
+         <property key="size">xxx</property>
+      </properties>
+   </element>
+</basketItem>
+

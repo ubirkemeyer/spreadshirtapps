@@ -1,0 +1,319 @@
+<html>
+<head>
+    <title>Simplomat "You link it, we print it" Demo</title>
+    <style type="text/css">
+    body, div, p, td, form, input, select, textarea {
+        font: 12px Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    .appearanceSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .sizeSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .price {
+        position:absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 5px;
+        left: 500px;
+        width: 300px;
+    }
+
+    .appearances {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        width: 450px;
+    }
+
+    .menu {
+        position:absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .designer {
+        position:absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+     }
+
+    .submitButton {
+        right: 10px;
+        bottom: 10px;
+        width: 150px;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .toolBox {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 250px;
+        height: 500px;
+        background-color: white;
+        overflow: hidden;
+        /* for IE */
+        filter:alpha(opacity=60);
+        /* CSS3 standard */
+        opacity:0.6;
+    }
+    .toolBox h1 {
+        font-size: 25px;
+        font-weight: bold;
+        margin-left: 0px;
+        margin-bottom: 0px;
+    }
+     .toolBoxEntry {
+        font-size: 15px;
+        margin-top: 5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 1px;
+         padding-top: 3px;
+         padding-bottom: 5px;
+        cursor: pointer;
+         float: left;
+     }
+
+     .toolBoxEntryLink {
+         text-decoration: none;
+         color: black;
+     }
+
+    .toolBoxEntryStoryLink {
+         color: black;
+        font-size: 11px;
+     }
+
+    .toolBoxEntryStoryLink a:hover {
+         color: orange;
+     }
+
+    .toolBoxEntryStoryLink a:visited {
+         color: lightgray;
+     }
+
+     .toolBoxEntry a:hover {
+         text-decoration: none;
+         color: orange;
+     }
+
+     .selectedEntry {
+         font-weight: bold;
+         color: orange;
+     }
+     .toggleBox {
+         position: absolute;
+        right: 5px;
+        top: 5px;
+        font-size: 12px;
+         text-decoration: underline;
+         cursor: pointer;
+     }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/feedreader.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script type="text/javascript" src="js/ext/Anzeigen_400.font.js"></script>
+    <script>
+        var feedReader = null;
+        var spreadshirtAPI = null;
+        var simplomat = null;
+        var currentSize = null;
+        var currentAppearance = null;
+        var currentHeadline = null;
+        var design = null;
+        var synchronized = false;
+        var newsVisible = true;
+        var initId = null;
+
+        window.onload = function () {
+            feedReader = new FeedReader("http://rss.cnn.com/rss/edition.rss", true);
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            simplomat = new Simplomat();
+            simplomat.priceChangedCallback = function() {
+                $("#price").html(this.product.getFormatedPrice());
+            };
+            simplomat.initCallback = function() {
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                $("#appearances").html("");
+                for (var i = 0; i < this.product.appearances.length; i++) {
+                    var appearance = this.product.appearances[i];
+                    $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" +  appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+                }
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+            };
+            simplomat.sizeChangedCallback = function() {
+                if (currentSize != null)
+                    $('#size_' + currentSize).removeClass('selected');
+                currentSize = simplomat.product.sizeId;
+                $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.appearanceChangedCallback = function() {
+                if (currentAppearance != null)
+                    $('#appearance_' + currentAppearance).removeClass('selected');
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                if (currentSize != null && $('#size_' + currentSize) != null)
+                    $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.errorCallback = function(errorCode, errorMessage) {
+                alert(errorMessage);
+            };
+            simplomat.init("designer", 600, spreadshirtAPI, true, true, null, "6", "1", null, "digi", 60, 0, 980, 500);
+            simplomat.product.changeAppearance(simplomat.product.appearanceId);
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+
+        function toggleBox() {
+            if (newsVisible) {
+                $('#toolBox').hide();
+                $('#toggleBox').text("Show");
+                newsVisible = false;
+            } else {
+                $('#toolBox').show();
+                $('#toggleBox').text("Hide");
+                newsVisible = true;
+            }
+
+        }
+    </script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!" onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+    <div></div>
+    <div id="toolBox" class="toolBox">
+        <h1>You link it, ...</h1>
+        <br/>
+        <b>Your Image Link</b>
+        <form action="javascript:simplomat.product.currentView.addDesign($('#imageUrl').val());">
+            <textarea id="imageUrl" rows="5" cols="15" style="width: 250px; border: 1px solid black;">http://fr.academic.ru/pictures/frwiki/66/Berlin_Fernsehturm_2005.jpg</textarea>
+            <input type="submit" value="Link it" style="background-color: orange; color: white; font-size: 13px; font-weight: bold; text-align: right;"/>
+        </form>
+        <b>Examples</b>
+        <ul>
+            <li><a href="javascript:simplomat.product.currentView.addDesign('http://fr.academic.ru/pictures/frwiki/66/Berlin_Fernsehturm_2005.jpg');">Berlin: Fernsehturm</a></li>
+            <li><a href="javascript:simplomat.product.currentView.addDesign('http://www.comet-tours.de/wp-content/gallery/paris/eiffelturm_bei_nacht.jpg');">Paris: Eifelturm</a></li>
+            <li><a href="javascript:simplomat.product.currentView.addDesign('http://nowinseattle.files.wordpress.com/2009/01/311208_silvester-032.jpg');">Vancouver: Space Needle</a></li>
+            <li><a href="javascript:simplomat.product.currentView.addDesign('http://upload.wikimedia.org/wikipedia/commons/8/82/London_Big_Ben_Phone_box.jpg');">London: Big Ben</a></li>                        
+        </ul>        
+        <h1>we print it ....</h1>
+    </div>
+    <div id="toggleBox" class="toggleBox" onclick="javascript:toggleBox();">Hide</div>
+    <div id="toolbar" style="position: absolute; left: 10px; top: 450px;">
+       <img src="img/rotateleft.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.rotate(-45);"/>
+        <img src="img/rotateright.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.rotate(45);"/>
+         <img src="img/zoomin.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.zoom(0.1);"/>
+         <img src="img/zoomout.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.zoom(-0.1);"/>
+         <img src="img/trash.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.remove();"/>
+    </div>
+</div>
+</body>
+</html>

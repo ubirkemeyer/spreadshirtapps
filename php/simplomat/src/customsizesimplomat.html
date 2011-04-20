@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Simplomat Demo - Custom size simplomat ...</title>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/ext/raphael.js"></script>
+<script type="text/javascript" src="js/ext/colorpicker.js"></script>
+<script type="text/javascript" src="js/simplomat.js"></script>
+<script type="text/javascript" src="js/customsimplomat.js"></script>
+<script type="text/javascript" src="js/spreadshirtapi.js"></script>
+<script type="text/javascript" src="js/feedreader.js"></script>
+<script>
+var spreadshirtAPI;
+var simplomat;
+
+window.onload = function () {
+    spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+    simplomat = new CustomSimplomat().init("designer", 500, spreadshirtAPI, true, true, null, "6", null, null, null, 280, 40, 800, 600);
+    var feedUrl = window.location.href.substr(0, window.location.href.lastIndexOf("/")) + "/extimg/images.xml";
+    var feedReader = new FeedReader(feedUrl, false);
+    var feed = feedReader.readFeed();
+    var albumImages = $('#albumImages');
+    feed.children("entry").each(function () {
+        var src = $(this).children("link");
+        var thumbnail = $(this).children("thumbnail");
+                albumImages.append("<div style=\"float:left; width: 74px; height: 74px; padding: 0px; margin: 1px; text-align: center; border: 1px solid #ccc; background-color: lightgray;\"><img src=\"" + thumbnail.attr("href") + "\" onclick=\"simplomat.product.currentView.addDesign('" + src.attr("href") + "');\" height=\"" + thumbnail.attr("height") + "\" width=\"" + thumbnail.attr("width") + "\" style=\"height: " + thumbnail.attr("height") + "; width: " + thumbnail.attr("width") + "; border: 0px; margin: 0px; padding: 0px;\"/></div>");
+            });
+    albumImages.append("<div>&nbsp;</div>");
+
+    setTimeout(function () {
+        for (i in simplomat) {
+            simplomat.R.safari();
+        }
+    });
+};
+</script>
+</head>
+<body>
+<div style="width: 980px; height: 600px;">
+    <div style="position: absolute; width: 900px; height: 600px; border: 1px solid black; background-image: url('img/palmen.jpg');">
+        <div id="designer">&nbsp;</div>
+    </div>
+    <div style="position: absolute; width: 150px; margin-left:50px; margin-top: 60px;">
+        <div id="albumImages"></div>
+    </div>
+</div>
+</body>
+</html>

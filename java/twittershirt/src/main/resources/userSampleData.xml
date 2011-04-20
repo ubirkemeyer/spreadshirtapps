@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user>
+  <id>14099632</id>
+  <name>Spreadshirt HQ </name>
+  <screen_name>spreadshirt</screen_name>
+  <location>Leipzig, Germany</location>
+  <description>Die Kreativplattform f&#252;r personalisierbare Kleidung. ++++++++++++++++++ For US-specific infos please also follow @spreadshirtcom</description>
+
+  <profile_image_url>http://s3.amazonaws.com/twitter_production/profile_images/66072209/lovetab_twitter_normal.jpg</profile_image_url>
+  <url>http://blog.spreadshirt.net/de/</url>
+  <protected>false</protected>
+  <followers_count>792</followers_count>
+  <profile_background_color>FFFFFF</profile_background_color>
+  <profile_text_color>222222</profile_text_color>
+
+  <profile_link_color>00a0e2</profile_link_color>
+  <profile_sidebar_fill_color>FFFFFF</profile_sidebar_fill_color>
+  <profile_sidebar_border_color>ffffff</profile_sidebar_border_color>
+  <friends_count>782</friends_count>
+  <created_at>Sat Mar 08 09:01:29 +0000 2008</created_at>
+  <favourites_count>80</favourites_count>
+
+  <utc_offset>3600</utc_offset>
+  <time_zone>Berlin</time_zone>
+  <profile_background_image_url>http://s3.amazonaws.com/twitter_production/profile_background_images/3502436/bg.gif</profile_background_image_url>
+  <profile_background_tile>true</profile_background_tile>
+  <statuses_count>568</statuses_count>
+  <status>
+
+    <created_at>Sat Mar 07 19:39:17 +0000 2009</created_at>
+    <id>1293749537</id>
+    <text>Neu im Blog: Shop Partner-Clips: Emma Cott, Ralph Ruthe &amp; Youtube: Man kann Werbung ja auf zwei Arte.. http://cli.gs/W2pnNX</text>
+    <source>&lt;a href="http://twitterfeed.com"&gt;twitterfeed&lt;/a&gt;</source>
+    <truncated>false</truncated>
+
+    <in_reply_to_status_id></in_reply_to_status_id>
+    <in_reply_to_user_id></in_reply_to_user_id>
+    <favorited>false</favorited>
+    <in_reply_to_screen_name></in_reply_to_screen_name>
+  </status>
+</user>

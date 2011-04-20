@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>Simplomat</title>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/ext/raphael.js"></script>
+<script type="text/javascript" src="js/simplomat.js"></script>
+<script type="text/javascript" src="js/customsimplomat.js"></script>
+<script type="text/javascript" src="js/spreadshirtapi.js"></script>
+<script>
+var spreadshirtAPI;
+var shirtDesigner = new Array();
+window.onload = function () {
+    spreadshirtAPI = new SpreadshirtAPI("eu", "524251");
+    shirtDesigner.push(new Simplomat().init("designer", 280, spreadshirtAPI, true, true, null, "6"));
+    shirtDesigner.push(new CustomSimplomat().init("designer", 400, spreadshirtAPI, true, true, null, "6"));
+    shirtDesigner.push(new CustomSimplomat().init("designer", 600, spreadshirtAPI, true, true, null, "6"));
+    setTimeout(function () {
+        for (i in shirtDesigner) {
+            shirtDesigner[i].R.safari();
+        }
+    });
+};
+</script>
+</head>
+<body>
+<div>
+    <div id="designer" style="float:left;">&nbsp;</div>
+    <div id="designer1" style="float:left;">&nbsp;</div>
+    <div id="designer2" style="float:left;">&nbsp;</div>
+</div>
+
+<div>
+    <h1>Images</h1>
+    <div>
+        <div style="float:left;"><img src="http://lh6.ggpht.com/_cO5IzDdIiYs/TIKBESMqqSI/AAAAAAAABa0/SVI5VoMT11k/s72/IMG_8103.JPG" alt="" onclick="shirtDesigner[2].product.currentView.addDesign('http://picasaweb.google.com/data/media/api/user/martin.breest/albumid/5513110789938610945/photoid/5513110804459333922?authkey=Gv1sRgCIvyx5CCgNO84AE');"/></div>
+        <div style="float:left;"><img src="http://lh3.ggpht.com/_cO5IzDdIiYs/TIKAiQ9zNbI/AAAAAAAABbw/TfedrBrE73c/s72/fahrradtour%20272.jpg" alt="" onclick="shirtDesigner[1].product.currentView.addDesign('http://picasaweb.google.com/data/media/api/user/martin.breest/albumid/5513110191601431233/photoid/5513110220012991922?authkey=Gv1sRgCKDt1pzkrsC4aA');"/></div>
+        <div><img src="http://lh4.ggpht.com/_cO5IzDdIiYs/TIKAjjV7t5I/AAAAAAAABao/byn3dyKIlKU/s72/fahrradtour%20155.jpg" alt="" onclick="shirtDesigner[0].product.currentView.addDesign('http://picasaweb.google.com/data/media/api/user/martin.breest/albumid/5513110191601431233/photoid/5513110242125920146?authkey=Gv1sRgCKDt1pzkrsC4aA');"/></div>
+    </div>
+</div>
+</body>
+</html>

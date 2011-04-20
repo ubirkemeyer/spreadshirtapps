@@ -1,0 +1,55 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="95"/>
+    <appearance id="2"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="text">
+            <printArea id="154"/>
+            <printType id="2"/>
+            <offset unit="mm">
+                <x>20.0</x>
+                <y>20.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <text transform="" font-style="normal" font-size="36"
+                          font-weight="normal" font-family="BelloScript"
+                          text-anchor="start" y="110" x="1">
+                        <tspan printColorId="2">A</tspan>
+                        <tspan printColorId="1">B</tspan>
+                        <tspan printColorId="106">C</tspan>
+                        <tspan printColorId="105">D</tspan>
+                        <tspan printColorId="10">E</tspan>
+                        <tspan printColorId="4">F</tspan>
+                        <tspan printColorId="8">G</tspan>
+                        <tspan printColorId="5">H</tspan>
+                        <tspan y="150" x="1" printColorId="11">I</tspan>
+                        <tspan printColorId="26">J</tspan>
+                        <tspan printColorId="24">K</tspan>
+                        <tspan printColorId="74">L</tspan>
+                        <tspan printColorId="3">M</tspan>
+                        <tspan printColorId="25">N</tspan>
+                        <tspan printColorId="96">O</tspan>
+                        <tspan printColorId="23">P</tspan>
+                        <tspan y="190" x="1" printColorId="6">Q</tspan>
+                        <tspan printColorId="7">R</tspan>
+                        <tspan printColorId="166">S</tspan>
+                        <tspan printColorId="166">T</tspan>
+                        <tspan printColorId="166">U</tspan>
+                        <tspan printColorId="166">V</tspan>
+                        <tspan printColorId="166">W</tspan>
+                        <tspan printColorId="166">X</tspan>
+                        <tspan y="240" x="1" printColorId="166">Y</tspan>
+                        <tspan printColorId="166">Z</tspan>
+                    </text>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>

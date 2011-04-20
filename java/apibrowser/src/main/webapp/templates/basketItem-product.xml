@@ -1,0 +1,17 @@
+<basketItem xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <!--shop id="{shopId}"/-->
+    <description>your custom desciption</description>
+    <quantity>1</quantity>
+    <element id="3167718" type="sprd:product"
+             xlink:href="http://{resourceHost}/api/v1/shops/40000/products/3167718">
+        <properties>
+            <property key="appearance">1</property>
+            <property key="size">2</property>
+        </properties>
+    </element>
+    <!-- use correct price here, HTML checkout will use correct price anyway-->
+    <price>
+       <vatIncluded>20.20</vatIncluded>
+       <currency id="1"/>
+    </price>
+</basketItem>

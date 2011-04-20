@@ -1,0 +1,10 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="95"/>
+    <appearance id="2"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+    </configurations>
+</product>

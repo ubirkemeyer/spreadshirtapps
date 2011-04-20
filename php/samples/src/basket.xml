@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<basket xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns="http://api.spreadshirt.net">
+   <!--optional-->
+   <!--token>xy</token-->
+   <!--user id="42"/-->
+   <!--shop id="42"/-->
+</basket>

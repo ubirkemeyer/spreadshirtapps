@@ -1,0 +1,2560 @@
+<?xml version="1.0" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="wadl_documentation.xsl"?>
+<application xmlns="http://research.sun.com/wadl/2006/10" xmlns:sns="http://api.spreadshirt.net" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <doc title="Spreadshirt Catalog API v1">Spreadshirt's catalog API allows you to access spreadshirt's inventory, product and design data in general, for specific users and specific shops. To find out how it works, click on the example Urls below.</doc>
+   <grammars>
+      <include href="api.xsd">
+         <doc>Catalog XML Schema.</doc>
+      </include>
+      <include href="xlink.xsd">
+         <doc>XLink Schema.</doc>
+      </include>
+   </grammars>
+   <resources base="http://api.spreadshirt.net/api/v1/">
+      <resource path="users/{userId}">
+         <doc>Return user data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000">http://api.spreadshirt.net/api/v1/users/40000</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:user">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/productTypes">
+         <doc>List available product types.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypes?apiKey=123456789&amp;sig=b5c55a8c0240f160f1b23299d1a5519eb5401d5f&amp;time=1270842176165&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/productTypes?apiKey=123456789&amp;sig=b5c55a8c0240f160f1b23299d1a5519eb5401d5f&amp;time=1270842176165&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypes?apiKey=123456789&amp;sig=c99f4482a481033e00601e4d69c31000298bdf83&amp;time=1270842176167&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/productTypes?apiKey=123456789&amp;sig=c99f4482a481033e00601e4d69c31000298bdf83&amp;time=1270842176167&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypes">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/productTypes/{productTypeId}">
+         <doc>Return product type data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypes/15?apiKey=123456789&amp;sig=a19e2fbca421de8ac71015acf392d2ccd8d8b59a&amp;time=1270842176171&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/productTypes/15?apiKey=123456789&amp;sig=a19e2fbca421de8ac71015acf392d2ccd8d8b59a&amp;time=1270842176171&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="productTypeId" type="xsd:string" required="true">
+                  <doc>Identifier of the product type to return data for, e.g. 15.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productType">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/printTypes">
+         <doc>List available print types.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/printTypes?apiKey=123456789&amp;sig=214968cd5f72587fa541ec15628b5e5af49ce03f&amp;time=1270842176178&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/printTypes?apiKey=123456789&amp;sig=214968cd5f72587fa541ec15628b5e5af49ce03f&amp;time=1270842176178&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/printTypes?apiKey=123456789&amp;sig=74e9e250279988a56d72856ba527f8ebbb54d855&amp;time=1270842176180&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/printTypes?apiKey=123456789&amp;sig=74e9e250279988a56d72856ba527f8ebbb54d855&amp;time=1270842176180&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:printTypes">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/printTypes/{printTypeId}">
+         <doc>Return print type data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/printTypes/5?apiKey=123456789&amp;sig=1d4da7e1dadc9d97d6313cc68be006fe0155b80d&amp;time=1270842176185&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/printTypes/5?apiKey=123456789&amp;sig=1d4da7e1dadc9d97d6313cc68be006fe0155b80d&amp;time=1270842176185&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="printTypeId" type="xsd:string" required="true">
+                  <doc>Identifier of the print type to return data for, e.g. 5.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:printType">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/fontFamilies">
+         <doc>List available font families.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/fontFamilies?apiKey=123456789&amp;sig=55090319713fb2b092ca632093ee41972b916a5c&amp;time=1270842176192&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/fontFamilies?apiKey=123456789&amp;sig=55090319713fb2b092ca632093ee41972b916a5c&amp;time=1270842176192&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/fontFamilies?apiKey=123456789&amp;sig=c47989d43502dce23a93dba15b819e1f46d5ba2a&amp;time=1270842176194&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/fontFamilies?apiKey=123456789&amp;sig=c47989d43502dce23a93dba15b819e1f46d5ba2a&amp;time=1270842176194&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:fontFamilies">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/fontFamilies/{fontFamilyId}">
+         <doc>Return data for one font family.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/fontFamilies/5?apiKey=123456789&amp;sig=e3fbc284887f23476e909a9bf13d0543ff7efcd3&amp;time=1270842176198&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/fontFamilies/5?apiKey=123456789&amp;sig=e3fbc284887f23476e909a9bf13d0543ff7efcd3&amp;time=1270842176198&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="fontFamilyId" type="xsd:string" required="true">
+                  <doc>Identifier of the font family to return data for, e.g. 5.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:fontFamily">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/productTypeDepartments">
+         <doc>List available product type departments.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments?apiKey=123456789&amp;sig=cb393900a5e1b2c1d8e7af85a9f613edc8ff7c90&amp;time=1270842176205&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments?apiKey=123456789&amp;sig=cb393900a5e1b2c1d8e7af85a9f613edc8ff7c90&amp;time=1270842176205&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments?apiKey=123456789&amp;sig=54cbaaf4c261992c3ca8d412ecea812cf7554a7f&amp;time=1270842176207&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments?apiKey=123456789&amp;sig=54cbaaf4c261992c3ca8d412ecea812cf7554a7f&amp;time=1270842176207&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypeDepartments">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/productTypeDepartments/{productTypeDepartmentId}">
+         <doc>Return product type department data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments/1?apiKey=123456789&amp;sig=27cd9e9a3e86f5c2cdf19c3230d7dfbefa2074af&amp;time=1270842176211&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/productTypeDepartments/1?apiKey=123456789&amp;sig=27cd9e9a3e86f5c2cdf19c3230d7dfbefa2074af&amp;time=1270842176211&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="productTypeDepartmentId" type="xsd:string" required="true">
+                  <doc>Identifier of the product type department to return data for, e.g. 1.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypeDepartment">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/products">
+         <doc>Create or list products for user.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/products?apiKey=123456789&amp;sig=4d305f3b1da1a1856b3acbdaec3a74de57b92ee0&amp;time=1270842176219&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/products?apiKey=123456789&amp;sig=4d305f3b1da1a1856b3acbdaec3a74de57b92ee0&amp;time=1270842176219&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/products?apiKey=123456789&amp;sig=04b35b7d90cd875cfaf02619daf6b7c90b43e5c2&amp;time=1270842176222&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/products?apiKey=123456789&amp;sig=04b35b7d90cd875cfaf02619daf6b7c90b43e5c2&amp;time=1270842176222&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:products">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="POST">
+            <doc></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:product">
+                  <doc title="Product Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/products/{productId}">
+         <doc>Return product data.</doc>
+         <method name="DELETE">
+            <doc>Deletes the product. This means the product gets deleted asynchronously later.</doc>
+            <request>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/products/1082550?apiKey=123456789&amp;sig=8802454f76f7b5f27e6f3c806b69d3264ba978c3&amp;time=1270842176229&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/products/1082550?apiKey=123456789&amp;sig=8802454f76f7b5f27e6f3c806b69d3264ba978c3&amp;time=1270842176229&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:product">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/products/{productId}/price">
+         <doc>Return product price data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/products/1082550/price?apiKey=123456789&amp;sig=464cf577d3102ce767b65ec554493697b0cf63da&amp;time=1270842176240&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/products/1082550/price?apiKey=123456789&amp;sig=464cf577d3102ce767b65ec554493697b0cf63da&amp;time=1270842176240&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:price">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/designCategories">
+         <doc>Return design categories for given shop if designs for the category exist. The following categories exist: <html:ul><html:li>500 - MY_DESIGNS - My Designs Category</html:li><html:li>501 - OWN - Own Designs Category - Category for designs that the user owns or that are assigned to a user's shop.</html:li><html:li>503 - GRABBED - Grabbed Designs Category - Category designs that the user has grabbed from someone else or that are assigned to a user's shop.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designCategories?apiKey=123456789&amp;sig=ccf579d6965acfc4b58f28fa1f0c28d6bf444256&amp;time=1270842176245&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/designCategories?apiKey=123456789&amp;sig=ccf579d6965acfc4b58f28fa1f0c28d6bf444256&amp;time=1270842176245&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designCategories?apiKey=123456789&amp;sig=fbc947b570f27773aeea28d3d30feed6948c5729&amp;time=1270842176247&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/designCategories?apiKey=123456789&amp;sig=fbc947b570f27773aeea28d3d30feed6948c5729&amp;time=1270842176247&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:designCategories">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/designCategories/{categoryId}/designs">
+         <doc>Return designs for given design category.<html:ul>   <html:li>Price for design is returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li><html:li>Activated and deactivated designs are returned!</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designCategories/501/designs?apiKey=123456789&amp;sig=f126a50a61b628a589acf77ae95c62e171774861&amp;time=1270842176251&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/designCategories/501/designs?apiKey=123456789&amp;sig=f126a50a61b628a589acf77ae95c62e171774861&amp;time=1270842176251&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designCategories/501/designs?apiKey=123456789&amp;sig=e747a4e2c21d5a3e086ac14c1f2b27375c84fdcd&amp;time=1270842176253&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/designCategories/501/designs?apiKey=123456789&amp;sig=e747a4e2c21d5a3e086ac14c1f2b27375c84fdcd&amp;time=1270842176253&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="categoryId" type="xsd:string" required="true">
+                  <doc>Identifier of the category to return data for, e.g. 500, 501, 503.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:designs">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/designs">
+         <doc>Create new user design.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designs?apiKey=123456789&amp;sig=30c86befe0c1341aab663b93deca7ddbcc5b6641&amp;time=1270842176259&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/designs?apiKey=123456789&amp;sig=30c86befe0c1341aab663b93deca7ddbcc5b6641&amp;time=1270842176259&amp;sessionId=123</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designs?apiKey=123456789&amp;sig=53b69bb698497664519bfda513ba76edf471a157&amp;time=1270842176262&amp;sessionId=123&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/designs?apiKey=123456789&amp;sig=53b69bb698497664519bfda513ba76edf471a157&amp;time=1270842176262&amp;sessionId=123&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="POST">
+            <doc></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:design">
+                  <doc title="Design Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/designs/{designId}">
+         <doc>Return data for a design.</doc>
+         <method name="DELETE">
+            <doc>Delete a design. Design is deleted later asynchronously!</doc>
+            <request>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. 6664977.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/designs/6664977?apiKey=123456789&amp;sig=a11248a1b09cb00b813f47bca87b0080b6b20278&amp;time=1270842176270&amp;sessionId=123">http://api.spreadshirt.net/api/v1/users/40000/designs/6664977?apiKey=123456789&amp;sig=a11248a1b09cb00b813f47bca87b0080b6b20278&amp;time=1270842176270&amp;sessionId=123</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. 6664977.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:design">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="PUT">
+            <doc>Update a design. You can update design name, description, restrictions and price.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. 6664977.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="query" name="sessionId" type="xsd:string">
+                  <doc>The security session id, e.g. 123.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" sessionId="123"(use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:design">
+                  <doc title="Design Update"/></representation>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="403">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="users/{userId}/shops">
+         <doc>List all available shops for the given user id.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/shops">http://api.spreadshirt.net/api/v1/users/40000/shops</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/users/40000/shops?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/users/40000/shops?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="userId" type="xsd:string" required="true">
+                  <doc>Identifier of the user the data is requested for, e.g. user id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:shops">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}">
+         <doc>Return shop data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000">http://api.spreadshirt.net/api/v1/shops/40000</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:shop">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/productTypes">
+         <doc>List product types for shop with shop specific prices.<html:ul> <html:li>Prices are returned in currency of shop by default.</html:li><html:li>(shopId == 0) - Prices are returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypes">http://api.spreadshirt.net/api/v1/shops/40000/productTypes</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypes?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/productTypes?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypes">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/productTypes/{productTypeId}">
+         <doc>Return product type with shop specific prices.<html:ul> <html:li>Prices are returned in currency of shop by default.</html:li><html:li>(shopId == 0) - Prices are returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypes/15">http://api.spreadshirt.net/api/v1/shops/40000/productTypes/15</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="productTypeId" type="xsd:string" required="true">
+                  <doc>Identifier of the product type to return data for, e.g. 15.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productType">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/printTypes">
+         <doc>List print types for shop with shop specific prices.<html:ul> <html:li>Prices are returned in currency of shop by default.</html:li><html:li>(shopId == 0) - Prices are returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/printTypes">http://api.spreadshirt.net/api/v1/shops/40000/printTypes</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/printTypes?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/printTypes?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:printTypes">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/printTypes/{printTypeId}">
+         <doc>Return print type with shop specific prices.<html:ul> <html:li>Prices are returned in currency of shop by default.</html:li><html:li>(shopId == 0) - Prices are returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/printTypes/5">http://api.spreadshirt.net/api/v1/shops/40000/printTypes/5</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="printTypeId" type="xsd:string" required="true">
+                  <doc>Identifier of the print type to return data for, e.g. 5.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:printType">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/fontFamilies">
+         <doc>List available font families for shop. Certain fonts are available in special shops only.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies">http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:fontFamilies">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/fontFamilies/{fontFamilyId}">
+         <doc>Return data for one font family.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies/5">http://api.spreadshirt.net/api/v1/shops/40000/fontFamilies/5</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="fontFamilyId" type="xsd:string" required="true">
+                  <doc>Identifier of the font family to return data for, e.g. 5.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:fontFamily">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/productTypeDepartments">
+         <doc>List available product type departments for shop. Not all product type departments are available in each shop.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments">http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypeDepartments">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/productTypeDepartments/{productTypeDepartmentId}">
+         <doc>Return product type department data in shop context.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments/1">http://api.spreadshirt.net/api/v1/shops/40000/productTypeDepartments/1</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="productTypeDepartmentId" type="xsd:string" required="true">
+                  <doc>Identifier of the product type department to return data for, e.g. 1.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:productTypeDepartment">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/designCategories">
+         <doc>Return design categories for given shop. The following categories exist: <html:ul><html:li>500 - MY_DESIGNS - My Designs Category</html:li><html:li>502 - UPLOADED - Uploaded Designs Category - Category for designs uploaded by the user.</html:li><html:li>510 - Shop - Shop Designs</html:li><html:li>b1000000 - BESTSELLER - Best of Marketplace Category - Category designs that are on the marketplace of the given language sorted by marketplace weight.</html:li><html:li>1000000 ++ - MARKETPLACE - Marketplace Categories</html:li><html:li>1xxxxxx + b1xxxxxx (BESTSELLER) - Category that contains marketplace bestseller for the category and all subcategories</html:li><html:li>xxx - SHOP - Shop category</html:li><html:li>2xxxxxx - SHOP - Shop specific category</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designCategories">http://api.spreadshirt.net/api/v1/shops/40000/designCategories</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designCategories?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/designCategories?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the categories, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:designCategories">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/designCategories/{categoryId}/designs">
+         <doc>Return designs for given design category.<html:ul>   <html:li>Price for design is returned in currency of shop by default.</html:li><html:li>(shopId == 0) - Price for design is returned in currency determined by the request locale - e.g. de_DE maps to Euro.</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designCategories/1000171/designs">http://api.spreadshirt.net/api/v1/shops/40000/designCategories/1000171/designs</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designCategories/1000171/designs?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/designCategories/1000171/designs?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="categoryId" type="xsd:string" required="true">
+                  <doc>Identifier of the category to return data for, e.g. 500, 501, 502, 510, b1000000, 1000000, 100xxxx, 200xxxx, xxx.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the list, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:designs">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/designs">
+         <doc>Get shop designs or create new customer shop designs.</doc>
+         <method name="GET">
+            <doc>Get all shop designs (no categories and categories).</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designs">http://api.spreadshirt.net/api/v1/shops/40000/designs</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designs?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/designs?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the list, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+         <method name="POST">
+            <doc>Create new shop design.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:design">
+                  <doc title="Design Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/designs/{designId}">
+         <doc>Return data for a design.</doc>
+         <method name="DELETE">
+            <doc>Delete a design. Design is deleted later asynchronously!</doc>
+            <request>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. m4298936-1.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/designs/m4298936-1">http://api.spreadshirt.net/api/v1/shops/40000/designs/m4298936-1</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. m4298936-1.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:design">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+         <method name="PUT">
+            <doc>Update a design. You can update name, description, restrictions and price of uploaded designs only.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="designId" type="xsd:string" required="true">
+                  <doc>Identifier of the design to return data for, e.g. m4298936-1.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:design">
+                  <doc title="Design Update"/></representation>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="403">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/articleCategories">
+         <doc>Return article categories for given shop. The following categories exist: <html:ul><html:li>500 - MY_ARTICLES - My Articles Category</html:li><html:li>510 - SHOP - Shop articles.</html:li><html:li>b1000000 - BESTSELLER - Best of Marketplace Category - Category articles that are on the marketplace of the given language sorted by marketplace weight.</html:li><html:li>1000000 ++ - MARKETPLACE - Marketplace Categories</html:li><html:li>1xxxxxx + b1xxxxxx (BESTSELLER) - Category that contains marketplace bestseller for the category and all subcategories</html:li><html:li>xxx - SHOP - Shop category</html:li><html:li>2xxxxxx - SHOP - Shop specific category</html:li></html:ul></doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articleCategories">http://api.spreadshirt.net/api/v1/shops/40000/articleCategories</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articleCategories?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/articleCategories?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the categories, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107) +productTypeDepartmentIds:(1 2) +productTypeCategoryIds:(100 200).</doc>
+               </param>
+               <param style="query" name="showFacets" type="xsd:string">
+                  <doc>Show facet results for product type departments and product type categories. Default is false. Works only with search query!</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:articleCategories">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/articleCategories/{categoryId}/articles">
+         <doc>Return articles for given article category.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articleCategories/1000171/articles">http://api.spreadshirt.net/api/v1/shops/40000/articleCategories/1000171/articles</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articleCategories/1000171/articles?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/articleCategories/1000171/articles?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="categoryId" type="xsd:string" required="true">
+                  <doc>Identifier of the category to return data for, e.g. 500, 510, b1000xxx, 1000xxxx, 200xxxx, xxx.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the list, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107) +productTypeDepartmentIds:(1 2) +productTypeCategoryIds:(100 200).</doc>
+               </param>
+               <param style="query" name="groupSimilarItems" type="xsd:string">
+                  <doc>Group similar articles, e.g. articles with the same design on the front view. Default is true. Works only with search query!</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:articles">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/articles">
+         <doc>List all articles for shop or marketplace shop.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articles">http://api.spreadshirt.net/api/v1/shops/40000/articles</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articles?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/articles?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="query" type="xsd:string">
+                  <doc>Provide the query to search on the list, e.g. ...?query=liebe. 
+You can refine your search by providing a set of category ids for which results should be returned only, e.g. ...?query=liebe +categoryIds:(1000107) +productTypeDepartmentIds:(1 2) +productTypeCategoryIds:(100 200).</doc>
+               </param>
+               <param style="query" name="groupSimilarItems" type="xsd:string">
+                  <doc>Group similar articles, e.g. articles with the same design on the front view. Default is true. Works only with search query!</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:articles">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/articles/{articleId}">
+         <doc>Return article data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articles/2876817">http://api.spreadshirt.net/api/v1/shops/40000/articles/2876817</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="articleId" type="xsd:string" required="true">
+                  <doc>Identifier of the article to return data for, e.g. 2876817.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:article">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/articles/{articleId}/price">
+         <doc>Return article price.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/articles/2876817/price">http://api.spreadshirt.net/api/v1/shops/40000/articles/2876817/price</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="articleId" type="xsd:string" required="true">
+                  <doc>Identifier of the article to return data for, e.g. 2876817.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:price">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/products">
+         <doc>Returns all products for a shop or create new customer products.</doc>
+         <method name="GET">
+            <doc>Returns all products for the articles in the shop!</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/products">http://api.spreadshirt.net/api/v1/shops/40000/products</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/products?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/shops/40000/products?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:products">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+         <method name="POST">
+            <doc>Create products for customer in shop.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:product">
+                  <doc title="Product Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/products/{productId}">
+         <doc>Return product data.</doc>
+         <method name="DELETE">
+            <doc>Deletes the product. This means the product gets deleted asynchronously later.)</doc>
+            <request>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/products/1082550">http://api.spreadshirt.net/api/v1/shops/40000/products/1082550</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:product">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="shops/{shopId}/products/{productId}/price">
+         <doc>Return product price data.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/shops/40000/products/1082550/price">http://api.spreadshirt.net/api/v1/shops/40000/products/1082550/price</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="shopId" type="xsd:string" required="true">
+                  <doc>Identifier of the shop the data is requested for, e.g. shop id 42.</doc>
+               </param>
+               <param style="template" name="productId" type="xsd:string" required="true">
+                  <doc>Identifier of the product to return data for, e.g. 1082550.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:price">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="baskets">
+         <doc>Allows to create or retrieve baskets by providing a valid session token and optionally a shop id.</doc>
+         <method name="POST">
+            <doc>Create a new basket or retrieve an existing one.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:basket">
+                  <doc title="Basket Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="baskets/{basketId}">
+         <doc>Return, delete or update basket data.</doc>
+         <method name="DELETE">
+            <doc>Delete an existing basket  for a given basket id.</doc>
+            <request>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc>Retrieve an existing basket for a given basket id.</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/baskets/123?apiKey=123456789&amp;sig=cb3241460f87f5492f9008932cf5d346fb820cf8&amp;time=1270842176380">http://api.spreadshirt.net/api/v1/baskets/123?apiKey=123456789&amp;sig=cb3241460f87f5492f9008932cf5d346fb820cf8&amp;time=1270842176380</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:basket">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="PUT">
+            <doc>Update an existing basket for a given basket id.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:basket">
+                  <doc title="Basket Update"/></representation>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="403">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="baskets/{basketId}/items">
+         <doc>List basket items or add new ones.</doc>
+         <method name="GET">
+            <doc>Retrieve all basket items for the given basket id.</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/baskets/123/items?apiKey=123456789&amp;sig=ef0a87ec0f6111ec75e0695d58d317c2f8744f33&amp;time=1270842176390">http://api.spreadshirt.net/api/v1/baskets/123/items?apiKey=123456789&amp;sig=ef0a87ec0f6111ec75e0695d58d317c2f8744f33&amp;time=1270842176390</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/baskets/123/items?apiKey=123456789&amp;sig=9d16a7f93e11758be2f76318aae7e72bb43e58a8&amp;time=1270842176392&amp;fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/baskets/123/items?apiKey=123456789&amp;sig=9d16a7f93e11758be2f76318aae7e72bb43e58a8&amp;time=1270842176392&amp;fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:basketItems">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="POST">
+            <doc>Add a basket item to the basket for the given basket id.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:basketItem">
+                  <doc title="Basket Item Creation"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="403">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="baskets/{basketId}/items/{basketItemId}">
+         <doc>Retrieve, update or delete basket item.</doc>
+         <method name="DELETE">
+            <doc>Delete a basket item for a given basket and basket item id.</doc>
+            <request>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="template" name="basketItemId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket item the data is requested for, e.g. basket id 45.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="GET">
+            <doc>Retrieve a basket item for a given basket and basket item id.</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/baskets/123/items/456?apiKey=123456789&amp;sig=dc42a64a877244ed812b281e97be7e04bf3a22cf&amp;time=1270842176397">http://api.spreadshirt.net/api/v1/baskets/123/items/456?apiKey=123456789&amp;sig=dc42a64a877244ed812b281e97be7e04bf3a22cf&amp;time=1270842176397</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="template" name="basketItemId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket item the data is requested for, e.g. basket id 45.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:basketItem">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+         <method name="PUT">
+            <doc>Update a basket item for a given basket and basket item id.</doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="template" name="basketItemId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket item the data is requested for, e.g. basket id 45.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:basketItem">
+                  <doc title="Basket Item Update"/></representation>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="403">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="baskets/{basketId}/checkout">
+         <doc>Return basket checkout url.</doc>
+         <method name="GET">
+            <doc>Return basket checkout url for a given basket id.</doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/baskets/123/checkout?apiKey=123456789&amp;sig=6651870717d840216057cfc49d7b6359db856a34&amp;time=1270842176407">http://api.spreadshirt.net/api/v1/baskets/123/checkout?apiKey=123456789&amp;sig=6651870717d840216057cfc49d7b6359db856a34&amp;time=1270842176407</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="basketId" type="xsd:string" required="true">
+                  <doc>Identifier of the basket the data is requested for, e.g. basket id 42.</doc>
+               </param>
+               <param style="query" name="apiKey" type="xsd:string">
+                  <doc>The requested API key, e.g. 123456789 (use your own key on live system).</doc>
+               </param>
+               <param style="query" name="sig" type="xsd:string">
+                  <doc>The signature as SHA-1 as Hex of string 'METHOD URL_WITHOUT_QUERY TIMESTAMP SECRET', e.g. 'POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156 987654321'.(use your own secret on live system).</doc>
+               </param>
+               <param style="query" name="time" type="xsd:string">
+                  <doc>The timestamp as milliseconds used in signature, e.g. 1240575575156.</doc>
+               </param>
+               <param style="header" name="Authorization" type="xsd:string">
+                  <doc>The requested authorization header, e.g. SprdAuth apiKey="123456789" data="POST http://localhost:8080/api/v1/users/42/productPriceCalculator 1240575575156" sig="70aab75c0b6217c2aff1f896bd4081fe30920911" (use your own authentication/authorization data on live system).</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:reference">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+               <fault mediaType="text/plain" status="401">
+                  <doc title="Unauthorized"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="currencies">
+         <doc>List all available currencies with their currency id.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/currencies">http://api.spreadshirt.net/api/v1/currencies</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/currencies?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/currencies?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:currencies">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="currencies/{currencyId}">
+         <doc>Return data for one currency.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/currencies/5">http://api.spreadshirt.net/api/v1/currencies/5</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="currencyId" type="xsd:string" required="true">
+                  <doc>Identifier of the currency to return data for, e.g. 4, 5.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:currency">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="countries">
+         <doc>List all available locales with their locale id.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/countries">http://api.spreadshirt.net/api/v1/countries</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/countries?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/countries?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:countries">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="countries/{countryId}">
+         <doc>Return data for one locale.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/countries/3">http://api.spreadshirt.net/api/v1/countries/3</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="countryId" type="xsd:string" required="true">
+                  <doc>Identifier of the locale to return data for, e.g. 3, 4, 5.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:country">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="languages">
+         <doc>List all available languages with their language id.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/languages">http://api.spreadshirt.net/api/v1/languages</html:a></doc>
+            <doc>Sample Url for full data is: <html:a href="http://api.spreadshirt.net/api/v1/languages?fullData=true&amp;limit=10">http://api.spreadshirt.net/api/v1/languages?fullData=true&amp;limit=10</html:a></doc>
+            <request>
+               <param default="false" style="query" name="fullData" type="xsd:boolean">
+                  <doc>Return full data or references only.</doc>
+               </param>
+               <param default="0" style="query" name="offset" type="xsd:int">
+                  <doc>Starting point for returning results, e.g. index 10, 20, 30.</doc>
+               </param>
+               <param default="50" style="query" name="limit" type="xsd:int">
+                  <doc>Elements returned starting from offset, e.g. 10, 20, 30 elements.</doc>
+               </param>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:languages">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="languages/{languageId}">
+         <doc>Return data for one language.</doc>
+         <method name="GET">
+            <doc></doc>
+            <doc>Sample Url is: <html:a href="http://api.spreadshirt.net/api/v1/languages/3">http://api.spreadshirt.net/api/v1/languages/3</html:a></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <param default="de_DE" style="query" name="locale" type="xsd:string">
+                  <doc>The requested locale, e.g. de_DE, en_GB, fr_FR. First part is language, second part is country.<html:br/>Default locale is de_DE.<html:br/>.</doc>
+               </param>
+               <param style="template" name="languageId" type="xsd:string" required="true">
+                  <doc>Identifier of the language to return data for, e.g. 3, 4, 5.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="application/xml" status="200" element="sns:language">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="sessions">
+         <doc>This resource allows to create security sessions valid for the whole platform, i.e. to login!</doc>
+         <method name="POST">
+            <doc></doc>
+            <request>
+               <param style="query" name="mediaType" type="xsd:string">
+                  <doc>The requested mediaType, e.g. xml. <html:br/>Default media type is XML. <html:br/>Valid media types are XML.</doc>
+               </param>
+               <representation mediaType="application/xml" element="sns:login">
+                  <doc title="Login Data"/></representation>
+            </request>
+            <response>
+               <param style="header" name="Location" type="xsd:string" required="true">
+                  <doc>The content location header contains the URI under which the created design can be retrieved and modified!</doc>
+               </param>
+               <representation mediaType="text/plain" status="201">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="sessions/{sessionId}">
+         <doc>This resource allows to delete open security sessions, i.e. to logout.</doc>
+         <method name="DELETE">
+            <doc></doc>
+            <request>
+               <param style="template" name="sessionId" type="xsd:string" required="true">
+                  <doc>A valid session id.</doc>
+               </param>
+            </request>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+               <fault mediaType="text/plain" status="500">
+                  <doc title="Internal Server Error"/></fault>
+               <fault mediaType="text/plain" status="400">
+                  <doc title="Bad Request"/></fault>
+               <fault mediaType="text/plain" status="404">
+                  <doc title="Resource Not Found"/></fault>
+            </response>
+         </method>
+      </resource>
+      <resource path="serverTime">
+         <doc>This resource returns the server time as UTC in milliseconds.</doc>
+         <method name="GET">
+            <request/>
+            <response>
+               <representation mediaType="text/plain" status="200">
+                  <doc title="Success"/></representation>
+            </response>
+         </method>
+      </resource>
+   </resources>
+</application>
+

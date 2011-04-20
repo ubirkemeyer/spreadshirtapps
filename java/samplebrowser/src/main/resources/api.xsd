@@ -1,0 +1,1446 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://api.spreadshirt.net" xmlns:tns="http://api.spreadshirt.net" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
+
+  <xs:element name="abstractList" type="tns:abstractList"/>
+
+  <xs:element name="appearance" type="tns:productTypeAppearanceDTO"/>
+
+  <xs:element name="appearanceColor" type="tns:productTypeAppearanceColorDTO"/>
+
+  <xs:element name="appearances" type="tns:productTypeAppearanceDTOList"/>
+
+  <xs:element name="article" type="tns:articleDTO"/>
+
+  <xs:element name="articleCategories" type="tns:articleCategoryDTOList"/>
+
+  <xs:element name="articleCategory" type="tns:articleCategoryDTO"/>
+
+  <xs:element name="articles" type="tns:articleDTOList"/>
+
+  <xs:element name="basket" type="tns:basketDTO"/>
+
+  <xs:element name="basketItem" type="tns:basketItemDTO"/>
+
+  <xs:element name="basketItems" type="tns:basketItemDTOList"/>
+
+  <xs:element name="configuration" type="tns:configurationDTO"/>
+
+  <xs:element name="countries" type="tns:countryDTOList"/>
+
+  <xs:element name="country" type="tns:countryDTO"/>
+
+  <xs:element name="currencies" type="tns:currencyDTOList"/>
+
+  <xs:element name="currency" type="tns:currencyDTO"/>
+
+  <xs:element name="defaultColor" type="tns:designColorDTO"/>
+
+  <xs:element name="design" type="tns:designDTO"/>
+
+  <xs:element name="designCategories" type="tns:designCategoryDTOList"/>
+
+  <xs:element name="designCategory" type="tns:designCategoryDTO"/>
+
+  <xs:element name="designs" type="tns:designDTOList"/>
+
+  <xs:element name="dimension" type="tns:dimension"/>
+
+  <xs:element name="facet" type="tns:facetDTO"/>
+
+  <xs:element name="font" type="tns:fontDTO"/>
+
+  <xs:element name="fontFamilies" type="tns:fontFamilyDTOList"/>
+
+  <xs:element name="fontFamily" type="tns:fontFamilyDTO"/>
+
+  <xs:element name="image" type="tns:image"/>
+
+  <xs:element name="language" type="tns:languageDTO"/>
+
+  <xs:element name="languages" type="tns:languageDTOList"/>
+
+  <xs:element name="length" type="tns:length"/>
+
+  <xs:element name="login" type="tns:loginDTO"/>
+
+  <xs:element name="path" type="tns:path"/>
+
+  <xs:element name="point" type="tns:point"/>
+
+  <xs:element name="price" type="tns:elementPrice"/>
+
+  <xs:element name="priceRequest" type="tns:productPriceRequestDTO"/>
+
+  <xs:element name="priceResponse" type="tns:productPriceResponseDTO"/>
+
+  <xs:element name="printArea" type="tns:printAreaDTO"/>
+
+  <xs:element name="printColor" type="tns:printColorDTO"/>
+
+  <xs:element name="printColors" type="tns:printColorDTOList"/>
+
+  <xs:element name="printType" type="tns:printTypeDTO"/>
+
+  <xs:element name="printTypes" type="tns:printTypeDTOList"/>
+
+  <xs:element name="product" type="tns:productDTO"/>
+
+  <xs:element name="productType" type="tns:productTypeDTO"/>
+
+  <xs:element name="productTypeCategories" type="tns:productTypeCategoryDTOList"/>
+
+  <xs:element name="productTypeCategory" type="tns:productTypeCategoryDTO"/>
+
+  <xs:element name="productTypeDepartment" type="tns:productTypeDepartmentDTO"/>
+
+  <xs:element name="productTypeDepartments" type="tns:productTypeDepartmentDTOList"/>
+
+  <xs:element name="productTypes" type="tns:productTypeDTOList"/>
+
+  <xs:element name="products" type="tns:productDTOList"/>
+
+  <xs:element name="rect" type="tns:rect"/>
+
+  <xs:element name="reference" type="tns:reference"/>
+
+  <xs:element name="request" type="tns:request"/>
+
+  <xs:element name="resource" type="tns:resource"/>
+
+  <xs:element name="response" type="tns:response"/>
+
+  <xs:element name="shape" type="tns:shape"/>
+
+  <xs:element name="shop" type="tns:shopDTO"/>
+
+  <xs:element name="shops" type="tns:shopDTOList"/>
+
+  <xs:element name="size" type="tns:productTypeSizeDTO"/>
+
+  <xs:element name="sizes" type="tns:productTypeSizeDTOList"/>
+
+  <xs:element name="stockState" type="tns:productTypeStockStateDTO"/>
+
+  <xs:element name="svg" type="tns:svg"/>
+
+  <xs:element name="text" type="tns:text"/>
+
+  <xs:element name="tspan" type="tns:tspan"/>
+
+  <xs:element name="user" type="tns:userDTO"/>
+
+  <xs:element name="view" type="tns:productTypeViewDTO"/>
+
+  <xs:element name="viewMap" type="tns:productTypeViewMapDTO"/>
+
+  <xs:complexType name="productTypeDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:productType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractList" abstract="true">
+    <xs:sequence>
+      <xs:element name="facets" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="tns:facet" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute ref="xlink:href"/>
+    <xs:attribute name="offset" type="xs:long" use="required"/>
+    <xs:attribute name="limit" type="xs:long" use="required"/>
+    <xs:attribute name="count" type="xs:long" use="required"/>
+    <xs:attribute name="sortField" type="xs:string"/>
+    <xs:attribute name="sortOrder" type="xs:string"/>
+    <xs:attribute name="query" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="brand" type="xs:string" minOccurs="0"/>
+          <xs:element ref="tns:price" minOccurs="0"/>
+          <xs:element name="defaultValues" type="tns:productTypeDefaultValuesDTO" minOccurs="0"/>
+          <xs:element name="appearances" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:appearance" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="sizes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:size" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="views" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:view" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="printAreas" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:printArea" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="stockStates" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:stockState" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dto">
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute ref="xlink:href"/>
+  </xs:complexType>
+
+  <xs:complexType name="elementPrice">
+    <xs:complexContent>
+      <xs:extension base="tns:price">
+        <xs:sequence>
+          <xs:element name="items" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="item" type="tns:priceItem" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="price">
+    <xs:sequence>
+      <xs:element name="vatExcluded" type="xs:decimal" minOccurs="0"/>
+      <xs:element name="vatIncluded" type="xs:decimal" minOccurs="0"/>
+      <xs:element name="vat" type="xs:decimal" minOccurs="0"/>
+      <xs:element name="currency" type="tns:reference" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="priceItem">
+    <xs:sequence>
+      <xs:element name="price" type="tns:price" minOccurs="0"/>
+      <xs:element name="items" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="item" type="tns:priceItem" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="index" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="reference">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeDefaultValuesDTO">
+    <xs:sequence>
+      <xs:element name="defaultView" type="tns:reference"/>
+      <xs:element name="defaultAppearance" type="tns:reference"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeAppearanceDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="colors" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="color" type="tns:productTypeAppearanceColorDTO" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="printTypes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="printType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeAppearanceColorDTO">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="index" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="resource">
+    <xs:sequence/>
+    <xs:attribute name="mediaType" type="xs:string"/>
+    <xs:attribute name="type" type="tns:resourceType"/>
+    <xs:attribute ref="xlink:href"/>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeSizeDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeViewDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="size" type="tns:dimension"/>
+          <xs:element name="perspective" type="tns:perspective" minOccurs="0"/>
+          <xs:element name="montage" type="tns:productTypeViewMontageDTO" minOccurs="0"/>
+          <xs:element name="viewMaps" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:viewMap" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dimension">
+    <xs:sequence>
+      <xs:element name="width" type="xs:double"/>
+      <xs:element name="height" type="xs:double"/>
+    </xs:sequence>
+    <xs:attribute name="unit" type="tns:unit"/>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeViewMontageDTO">
+    <xs:sequence>
+      <xs:element name="backgroundImage" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="foregroundImage" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeViewMapDTO">
+    <xs:sequence>
+      <xs:element name="transformations" type="tns:transformationDTO" minOccurs="0"/>
+      <xs:element name="printAreaClippingShape" type="tns:shapeDTO" minOccurs="0"/>
+      <xs:element name="printArea" type="tns:reference" minOccurs="0"/>
+      <xs:element name="offset" type="tns:point" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="transformationDTO">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:complexType name="shapeDTO">
+    <xs:sequence>
+      <xs:element name="content" type="tns:shapeContentDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="shapeContentDTO">
+    <xs:sequence>
+      <xs:element ref="tns:svg"/>
+    </xs:sequence>
+    <xs:attribute name="unit" type="tns:unit"/>
+  </xs:complexType>
+
+  <xs:complexType name="svg">
+    <xs:sequence>
+      <xs:element ref="tns:path" minOccurs="0"/>
+      <xs:element ref="tns:rect" minOccurs="0"/>
+      <xs:element ref="tns:image" minOccurs="0"/>
+      <xs:element ref="tns:text" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:string"/>
+    <xs:attribute name="viewBox" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="path">
+    <xs:complexContent>
+      <xs:extension base="tns:shape">
+        <xs:sequence/>
+        <xs:attribute name="d" type="xs:string"/>
+        <xs:attribute name="id" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="shape" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="x" type="xs:string"/>
+    <xs:attribute name="y" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="rect">
+    <xs:complexContent>
+      <xs:extension base="tns:shape">
+        <xs:sequence/>
+        <xs:attribute name="width" type="xs:string"/>
+        <xs:attribute name="height" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="image">
+    <xs:sequence/>
+    <xs:attribute name="designId" type="xs:string"/>
+    <xs:attribute name="printColorIds" type="xs:string"/>
+    <xs:attribute name="printColorRGBs" type="xs:string"/>
+    <xs:attribute name="x" type="xs:string"/>
+    <xs:attribute name="y" type="xs:string"/>
+    <xs:attribute name="width" type="xs:string"/>
+    <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="transform" type="xs:string"/>
+    <xs:attribute ref="xlink:href"/>
+  </xs:complexType>
+
+  <xs:complexType name="text">
+    <xs:complexContent>
+      <xs:extension base="tns:tspan">
+        <xs:sequence/>
+        <xs:attribute name="width" type="xs:string"/>
+        <xs:attribute name="height" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="tspan" mixed="true">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:tspan"/>
+        <xs:element ref="tns:text"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="fontFamilyId" type="xs:string"/>
+    <xs:attribute name="fontId" type="xs:string"/>
+    <xs:attribute name="printColorId" type="xs:string"/>
+    <xs:attribute name="x" type="xs:string"/>
+    <xs:attribute name="y" type="xs:string"/>
+    <xs:attribute name="text-anchor" type="xs:string"/>
+    <xs:attribute name="fill" type="xs:string"/>
+    <xs:attribute name="font-family" type="xs:string"/>
+    <xs:attribute name="font-weight" type="xs:string"/>
+    <xs:attribute name="font-size" type="xs:string"/>
+    <xs:attribute name="font-style" type="xs:string"/>
+    <xs:attribute name="transform" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="point">
+    <xs:sequence>
+      <xs:element name="x" type="xs:double"/>
+      <xs:element name="y" type="xs:double"/>
+    </xs:sequence>
+    <xs:attribute name="unit" type="tns:unit"/>
+  </xs:complexType>
+
+  <xs:complexType name="printAreaDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="appearanceColorIndex" type="xs:int"/>
+          <xs:element name="defaultView" type="tns:reference"/>
+          <xs:element name="restrictions" type="tns:printAreaRestrictionsDTO"/>
+          <xs:element name="boundary" type="tns:printAreaBoundaryDTO"/>
+          <xs:element name="defaultPositioningBox" type="tns:defaultPositioningBoxDTO" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printAreaRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="excludedPrintTypes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="excludedPrintType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="printAreaBoundaryDTO">
+    <xs:sequence>
+      <xs:element name="size" type="tns:dimension"/>
+      <xs:element name="hard" type="tns:shapeDTO" minOccurs="0"/>
+      <xs:element name="soft" type="tns:shapeDTO" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="defaultPositioningBoxDTO">
+    <xs:sequence>
+      <xs:element name="content" type="tns:shapeContentDTO"/>
+      <xs:element name="horizontalAlignment" type="xs:string"/>
+      <xs:element name="verticalAlignment" type="xs:string"/>
+      <xs:element name="canRotate" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeStockStateDTO">
+    <xs:sequence>
+      <xs:element name="appearance" type="tns:reference"/>
+      <xs:element name="size" type="tns:reference"/>
+      <xs:element name="available" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="facetDTO">
+    <xs:sequence>
+      <xs:element name="entryCount" type="xs:int"/>
+      <xs:element name="optionPattern" type="xs:string"/>
+      <xs:element name="entries" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" type="tns:facetEntryDTO" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="facetEntryDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="entryCount" type="xs:int"/>
+          <xs:element name="option" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeAppearanceDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:appearance" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeSizeDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:size" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeDepartmentDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="categories" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="category" type="tns:productTypeCategoryDTO" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeCategoryDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="productTypes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="productType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeDepartmentDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:productTypeDepartment" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productTypeCategoryDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:productTypeCategory" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="fontDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="weight" type="tns:fontWeight"/>
+          <xs:element name="style" type="tns:fontStyle"/>
+          <xs:element name="minimalSize" type="xs:double"/>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="fontFamilyDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="printTypes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="printType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="fonts" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:font" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="deprecated" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="fontFamilyDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:fontFamily" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printColorDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="fill" type="xs:string"/>
+          <xs:element ref="tns:price" minOccurs="0"/>
+          <xs:element name="restrictions" type="tns:printColorRestrictionsDTO"/>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printColorRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="printableAbovePrintColors" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="printableAbovePrintColor" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="printTypeDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="size" type="tns:dimension"/>
+          <xs:element name="dpi" type="xs:double"/>
+          <xs:element name="colors" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="color" type="tns:printColorDTO" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="restrictions" type="tns:printTypeRestrictionsDTO"/>
+          <xs:element ref="tns:price" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printTypeRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="colorSpace" type="xs:string" minOccurs="0"/>
+      <xs:element name="whiteSupported" type="xs:boolean"/>
+      <xs:element name="transparencySupported" type="xs:boolean"/>
+      <xs:element name="scaleability" type="xs:string" minOccurs="0"/>
+      <xs:element name="printableAlongWithPrintTypes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="printableAlongWithPrintType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="printableAbovePrintTypes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="printableAbovePrintType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="maxPrintColorLayers" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="printColorDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:printColor" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printTypeDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:printType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="designDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="tags" type="xs:string" minOccurs="0"/>
+          <xs:element name="user" type="tns:reference" minOccurs="0"/>
+          <xs:element name="restrictions" type="tns:designRestrictionsDTO" minOccurs="0"/>
+          <xs:element name="size" type="tns:dimension" minOccurs="0"/>
+          <xs:element name="colors" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="color" type="tns:designColorDTO" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="backgroundColor" type="xs:string" minOccurs="0"/>
+          <xs:element name="printTypes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="printType" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="designCategories" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="designCategory" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element ref="tns:price" minOccurs="0"/>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="designRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="fixedColors" type="xs:boolean"/>
+      <xs:element name="ownText" type="xs:boolean"/>
+      <xs:element name="obligatory" type="xs:boolean"/>
+      <xs:element name="movable" type="xs:boolean"/>
+      <xs:element name="targetView" type="xs:int"/>
+      <xs:element name="minimumScale" type="xs:int"/>
+      <xs:element name="visible" type="xs:boolean"/>
+      <xs:element name="inverted" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="designColorDTO">
+    <xs:sequence>
+      <xs:element name="default" type="xs:string"/>
+      <xs:element name="origin" type="xs:string"/>
+      <xs:element name="resources" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="designCategoryDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="entryCount" type="xs:int" minOccurs="0"/>
+          <xs:element name="designs" type="tns:reference"/>
+          <xs:element name="designCategories" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:designCategory" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double" use="required"/>
+        <xs:attribute name="type" type="tns:type" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="designCategoryDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:designCategory" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="designDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:design" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="articleDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:article" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="articleDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="tags" type="xs:string" minOccurs="0"/>
+          <xs:element ref="tns:price"/>
+          <xs:element name="shop" type="tns:reference"/>
+          <xs:element ref="tns:product"/>
+          <xs:element name="articleCategories" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="articleCategory" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="relatedArticles" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="relatedArticle" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="user" type="tns:reference" minOccurs="0"/>
+          <xs:element name="productType" type="tns:reference"/>
+          <xs:element name="appearance" type="tns:reference"/>
+          <xs:element name="restrictions" type="tns:productRestrictionsDTO"/>
+          <xs:element name="configurations" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:configuration" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="defaultValues" type="tns:productDefaultValuesDTO" minOccurs="0"/>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="freeColorSelection" type="xs:boolean"/>
+      <xs:element name="example" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="configurationDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="printArea" type="tns:reference"/>
+          <xs:element name="printType" type="tns:reference"/>
+          <xs:element name="offset" type="tns:point"/>
+          <xs:element name="content" type="tns:configurationContentDTO"/>
+          <xs:element name="fontFamilies" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="fontFamily" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="designs" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="design" type="tns:reference" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="restrictions" type="tns:configurationRestrictionsDTO" minOccurs="0"/>
+          <xs:element name="resources" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:resource" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="tns:configurationType" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="configurationContentDTO">
+    <xs:sequence>
+      <xs:element ref="tns:svg"/>
+    </xs:sequence>
+    <xs:attribute name="unit" type="tns:unit"/>
+    <xs:attribute name="dpi" type="xs:double" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="configurationRestrictionsDTO">
+    <xs:sequence>
+      <xs:element name="changeable" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="productDefaultValuesDTO">
+    <xs:sequence>
+      <xs:element name="defaultView" type="tns:reference" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="articleCategoryDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="entryCount" type="xs:int" minOccurs="0"/>
+          <xs:element name="articles" type="tns:reference"/>
+          <xs:element name="articleCategories" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:articleCategory" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="weight" type="xs:double" use="required"/>
+        <xs:attribute name="type" type="tns:articleCategoryType" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="articleCategoryDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:articleCategory" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:product" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="productPriceRequestDTO">
+    <xs:sequence>
+      <xs:element name="currency" type="tns:reference" minOccurs="0"/>
+      <xs:element ref="tns:product" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="productPriceResponseDTO">
+    <xs:sequence>
+      <xs:element ref="tns:price" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="shopDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="user" type="tns:reference"/>
+          <xs:element name="country" type="tns:reference"/>
+          <xs:element name="language" type="tns:reference"/>
+          <xs:element name="currency" type="tns:reference"/>
+          <xs:element name="productTypes" type="tns:reference" minOccurs="0"/>
+          <xs:element name="printTypes" type="tns:reference" minOccurs="0"/>
+          <xs:element name="fontFamilies" type="tns:reference" minOccurs="0"/>
+          <xs:element name="productTypeDepartments" type="tns:reference" minOccurs="0"/>
+          <xs:element name="designCategories" type="tns:reference" minOccurs="0"/>
+          <xs:element name="designs" type="tns:reference" minOccurs="0"/>
+          <xs:element name="articleCategories" type="tns:reference" minOccurs="0"/>
+          <xs:element name="articles" type="tns:reference" minOccurs="0"/>
+          <xs:element name="products" type="tns:reference" minOccurs="0"/>
+          <xs:element name="currencies" type="tns:reference" minOccurs="0"/>
+          <xs:element name="languages" type="tns:reference" minOccurs="0"/>
+          <xs:element name="countries" type="tns:reference" minOccurs="0"/>
+          <xs:element name="baskets" type="tns:reference" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="shopDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:shop" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="userDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="country" type="tns:reference"/>
+          <xs:element name="language" type="tns:reference"/>
+          <xs:element name="currency" type="tns:reference"/>
+          <xs:element name="productTypes" type="tns:reference" minOccurs="0"/>
+          <xs:element name="printTypes" type="tns:reference" minOccurs="0"/>
+          <xs:element name="fontFamilies" type="tns:reference" minOccurs="0"/>
+          <xs:element name="productTypeDepartments" type="tns:reference" minOccurs="0"/>
+          <xs:element name="designCategories" type="tns:reference" minOccurs="0"/>
+          <xs:element name="designs" type="tns:reference" minOccurs="0"/>
+          <xs:element name="products" type="tns:reference" minOccurs="0"/>
+          <xs:element name="currencies" type="tns:reference" minOccurs="0"/>
+          <xs:element name="languages" type="tns:reference" minOccurs="0"/>
+          <xs:element name="countries" type="tns:reference" minOccurs="0"/>
+          <xs:element name="shops" type="tns:reference" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="basketDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string" minOccurs="0"/>
+          <xs:element name="shop" type="tns:reference" minOccurs="0"/>
+          <xs:element name="user" type="tns:reference" minOccurs="0"/>
+          <xs:element name="basketItems" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="tns:basketItem" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="basketItemDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="quantity" type="xs:int" minOccurs="0"/>
+          <xs:element name="element" type="tns:elementDTO" minOccurs="0"/>
+          <xs:element ref="tns:price" minOccurs="0"/>
+          <xs:element name="shop" type="tns:reference" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="elementDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="properties" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="property" type="tns:elementPropertyDTO" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="elementPropertyDTO">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="key" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="basketItemDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:basketItem" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="currencyDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:currency" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="currencyDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="plain" type="xs:string"/>
+          <xs:element name="isoCode" type="xs:string"/>
+          <xs:element name="symbol" type="xs:string"/>
+          <xs:element name="decimalCount" type="xs:int"/>
+          <xs:element name="pattern" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="countryDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:country" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="countryDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="isoCode" type="xs:string"/>
+          <xs:element name="thousandsSeparator" type="xs:string"/>
+          <xs:element name="decimalPoint" type="xs:string"/>
+          <xs:element ref="tns:length"/>
+          <xs:element name="currency" type="tns:reference"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="length">
+    <xs:sequence>
+      <xs:element name="unit" type="xs:string"/>
+      <xs:element name="unitFactor" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="languageDTOList">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractList">
+        <xs:sequence>
+          <xs:element ref="tns:language" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="languageDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:dto">
+        <xs:sequence>
+          <xs:element name="isoCode" type="xs:string"/>
+          <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="request">
+    <xs:sequence>
+      <xs:element name="payload" type="tns:payload"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="payload">
+    <xs:sequence>
+      <xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="response">
+    <xs:sequence>
+      <xs:element name="status" type="tns:status" minOccurs="0"/>
+      <xs:element name="headers" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="header" type="tns:header" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="payload" type="tns:payload" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="status">
+    <xs:sequence>
+      <xs:element name="code" type="xs:string" minOccurs="0"/>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="header">
+    <xs:sequence>
+      <xs:element name="key" type="xs:string" minOccurs="0"/>
+      <xs:element name="value" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="loginDTO">
+    <xs:sequence>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="resourceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="image"/>
+      <xs:enumeration value="preview"/>
+      <xs:enumeration value="montage"/>
+      <xs:enumeration value="product"/>
+      <xs:enumeration value="composition"/>
+      <xs:enumeration value="size"/>
+      <xs:enumeration value="detail"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="unit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="mm"/>
+      <xs:enumeration value="px"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="perspective">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="front"/>
+      <xs:enumeration value="back"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="hood_right"/>
+      <xs:enumeration value="hood_left"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="fontWeight">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="bold"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="fontStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="italic"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MY_DESIGNS"/>
+      <xs:enumeration value="SHOP_DEFAULT"/>
+      <xs:enumeration value="UPLOADED"/>
+      <xs:enumeration value="GRABBED"/>
+      <xs:enumeration value="HISTORY"/>
+      <xs:enumeration value="MARKETPLACE"/>
+      <xs:enumeration value="SHOP"/>
+      <xs:enumeration value="BESTSELLER"/>
+      <xs:enumeration value="OWN"/>
+      <xs:enumeration value="SHOP_CUSTOM"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="configurationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="design"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="articleCategoryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MY_ARTICLES"/>
+      <xs:enumeration value="SHOP_DEFAULT"/>
+      <xs:enumeration value="HISTORY"/>
+      <xs:enumeration value="MARKETPLACE"/>
+      <xs:enumeration value="SHOP"/>
+      <xs:enumeration value="BESTSELLER"/>
+      <xs:enumeration value="OWN"/>
+      <xs:enumeration value="SHOP_CUSTOM"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

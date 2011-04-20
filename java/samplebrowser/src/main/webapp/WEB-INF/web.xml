@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+    <display-name>Sample Browser</display-name>
+    <servlet>
+        <servlet-name>AppManager</servlet-name>
+        <servlet-class>net.sprd.sampleapps.common.mgmt.AppManager</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckoutController</servlet-name>
+        <servlet-class>net.sprd.sampleapps.customshop.CheckoutController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ArticlesController</servlet-name>
+        <servlet-class>net.sprd.sampleapps.customshop.ArticlesController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BasketController</servlet-name>
+        <servlet-class>net.sprd.sampleapps.customshop.BasketController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SimpleBasketController</servlet-name>
+        <servlet-class>net.sprd.sampleapps.customshop.SimpleBasketController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DesignsController</servlet-name>
+        <servlet-class>net.sprd.sampleapps.designbrowser.DesignsController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckoutController</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ArticlesController</servlet-name>
+        <url-pattern>/articles/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BasketController</servlet-name>
+        <url-pattern>/basket</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SimpleBasketController</servlet-name>
+        <url-pattern>/simplebasket</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DesignsController</servlet-name>
+        <url-pattern>/designs</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+       <welcome-file>index.jsp</welcome-file>
+     </welcome-file-list>
+</web-app>

@@ -1,0 +1,73 @@
+
+.sprdArticleDetails{
+  color:#000;
+  margin:5px 4px 4px 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: none;
+}
+
+.sprdArticleButton {
+  cursor: pointer;
+}
+
+.sprdHeadline {
+  text-align: center;
+  font-size: 20px;
+  font-variant:small-caps;
+  cursor: pointer;
+}
+
+.sprdArticleImage img{
+  border: none;
+}
+
+.product-price {
+    font-size:20px;
+    line-height: 27px;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#eb5f1f;
+    font-weight:bold;
+}
+
+.dialogDescription {
+    float: right;
+}
+
+.dialogSizeElement {
+    float: left;
+}
+
+#buynow {
+	display: block;
+	width: auto;
+	margin-top: 24px;
+	padding: 0 12px;
+	text-align: center;
+	letter-spacing: 0.025em;
+	font-size: 1.1em;
+	font-weight: bold;
+	line-height: 1.41em;
+	color: #FFF;
+	float: right; /* float buttons to the left by default */
+	cursor: pointer; /* show mouse-hand */
+	border: 1px solid #EB5F1F;
+	background: #EB5F1F;
+}
+
+/* ------------------------------------------------------------------------- */
+
+
+#carousel{
+		width: 50%;
+		height: 90px;
+		left: 100px;
+}
+#carousel a {
+		position: absolute;
+		width: 110px;
+}
+
+#carousel a img {
+        border: none;
+}

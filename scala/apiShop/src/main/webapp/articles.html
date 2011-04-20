@@ -1,0 +1,49 @@
+<lift:surround with="default" at="content">
+  <lift:shopArticles.head />
+  <h2><lift:shopHeader.title /></h2>
+      <div id="floatdiv" style="
+       position:absolute;
+        width:250px;left:0px;top:0px;
+        padding:16px;background:#FFFFFF;
+        border:2px solid #FF8800">Basket: <br/>
+  <lift:comet type="CometBasket" name="Other">
+      <basket:content>Loading...</basket:content>
+  </lift:comet>
+     </div>
+  <script id="json" src="/basketFloat.js" type="text/javascript"/>
+  <p>
+ <!-- <h4><lift:shopArticles.count /> Articles</h4>-->
+  <div id="json_result"></div>
+  <table>
+      <lift:shopArticles.navi />
+  <lift:shopArticles.formlist>
+        <tr>
+           <!-- <td>
+                <articles:previews >
+                    <previews:image />
+                </articles:previews >
+            </td>-->
+            <td>
+                <articles:image />
+            </td> 
+            <td> 
+                <articles:name /><br />
+                <articles:price /><br />
+                <articles:appearanceHidden />
+                <articles:appearances >
+                    <appearances:appearance />
+                </articles:appearances >
+                <br />
+                <articles:sizes >
+                    <sizes:size />
+                </articles:sizes >
+                <br />
+                <articles:cart />
+            </td>
+        </tr>
+  </lift:shopArticles.formlist >
+  <lift:shopArticles.navi />
+  </table>
+</p>
+</lift:surround>
+

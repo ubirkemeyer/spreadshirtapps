@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Simplomat Text Demo</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-size: 75%;
+            color: #222;
+            background: #ffffff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.6em;
+        }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/ext/colorpicker.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/customsimplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script type="text/javascript" src="js/ext/Anzeigen_400.font.js"></script>
+    <script>
+        var spreadshirtAPI;
+        var simplomat;
+        var text = null;
+        var design = null;
+        var synchronized = false;
+
+        window.onload = function () {
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            simplomat = new CustomSimplomat().init("designer", 600, spreadshirtAPI, false, false, null, "6", "1", null, "flock");
+            selectText('1');
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+
+        function selectText(id) {
+            if (!synchronized) {
+                synchronized = true;
+                if (text != null) 
+                    text.remove();
+                if (design != null)
+                    design.remove();
+                simplomat.product.currentView.addTextAndLayout($("#" + id).text(), 3, 80, 50, 109, 25, "#000000", true, function() {
+                    this.moveToRelativePosition(50, 25);
+                    text = this;
+                });
+                simplomat.product.currentView.addDesign(null, "4868344", true, ["#008751"], function() {
+                    this.zoom(-0.8);
+                    this.moveToPositionRelativeTo(text, "below", "right", 0);
+                    design = this;
+                });
+                synchronized = false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="designer" style="position:absolute;">&nbsp;</div>
+<div style="position:absolute; margin-left: 620px; width: 360px;">
+    <h1>News Headlines</h1>
+    <a id="1" href="javascript:selectText('1');">Hungary plant that leaked toxic sludge to reopen</a><br/>
+    <a id="2" href="javascript:selectText('2');">French lawmakers approve stripping some criminals of citizenship</a><br/>
+    <a id="3" href="javascript:selectText('3');">Locals in Hungary: We can never return after toxic spill</a><br/>
+    <a id="4" href="javascript:selectText('4');">French strike enters second day</a><br/>
+    <a id="5" href="javascript:selectText('5');">Workers building emergency dams to stem second toxic spill</a><br/>
+    <a id="6" href="javascript:selectText('6');">Heightened concerns in Europe over potential terrorist attack</a><br/>
+    <a id="7" href="javascript:selectText('7');">Freed Russian spy now adviser of Russian bank</a><br/>
+    <a id="8" href="javascript:selectText('8');">Clinton makes diplomatic call to splintered Balkan states</a><br/>
+</div>
+</body>
+</html>

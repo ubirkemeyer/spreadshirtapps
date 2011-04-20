@@ -1,0 +1,20 @@
+<lift:surround with="default" at="content">
+  <h2><lift:shopHeader.title /></h2>
+  <p><table>
+  <lift:shopBasket.list>
+        <tr>
+            <td>
+                <basketitem:image />
+            </td> 
+            <td> 
+                
+                <basketitem:size /><br />
+                <basketitem:price /><br />
+               
+            </td>
+        </tr>
+  </lift:shopBasket.list >
+  </table>
+</p>
+</lift:surround>
+

@@ -1,0 +1,73 @@
+<html>
+<head>
+    <title>Simplomat</title>
+    <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/customsimplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+    <script>
+        var spreadshirtAPI;
+        var shirtDesigner = new Array();
+        window.onload = function () {
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251");
+            shirtDesigner.push(new CustomSimplomat().init("designer1", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer2", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer3", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer4", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer5", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer6", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer7", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer8", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer9", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer10", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer11", 280, spreadshirtAPI, false, true, null, "6"));
+            shirtDesigner.push(new CustomSimplomat().init("designer12", 280, spreadshirtAPI, false, true, null, "6"));
+
+            conductSearch("");
+
+            setTimeout(function () {
+                for (i in shirtDesigner) {
+                    shirtDesigner[i].R.safari();
+                }
+            });
+        };
+
+        function conductSearch(query) {
+            var designs = spreadshirtAPI.getMarketplaceDesigns(0, 12, query);
+            var i = 0;
+            designs.children("design").each(function () {
+                //alert("#" + i + " "  + imageIds[i] + " " + $(this).children("resources").children("resource").attr("xlink:href") + "?width=50&height=50");
+                shirtDesigner[i].product.removeAllDesigns();
+                shirtDesigner[i].product.currentView.addDesignById($(this).attr("id"), true);
+                i++;
+            });
+            for (j = i; j < shirtDesigner.length; j++) {
+                shirtDesigner[j].product.removeAllDesigns();                    
+            }
+        }
+    </script>
+</head>
+<body>
+<div style="width: 1120px; text-align: center;">
+<h1>Spreadshirt Search</h1>
+<input id="searchField" type="input" style="width: 600px; font-size: 26px; font-weight: bold;" onchange="conductSearch($('#searchField').val());"/>
+<br/><br/>
+</div>
+<div style="width: 1160px;">
+    <div id="designer1" style="float:left;">&nbsp;</div>
+    <div id="designer2" style="float:left;">&nbsp;</div>
+    <div id="designer3" style="float:left;">&nbsp;</div>
+    <div id="designer4" style="float:left;">&nbsp;</div>
+    <div id="designer5" style="float:left;">&nbsp;</div>
+    <div id="designer6" style="float:left;">&nbsp;</div>
+    <div id="designer7" style="float:left;">&nbsp;</div>
+    <div id="designer8" style="float:left;">&nbsp;</div>
+    <div id="designer9" style="float:left;">&nbsp;</div>
+    <div id="designer10" style="float:left;">&nbsp;</div>
+    <div id="designer11" style="float:left;">&nbsp;</div>
+    <div id="designer12"/>
+</div>
+</body>
+</html>

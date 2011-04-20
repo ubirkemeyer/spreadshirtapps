@@ -1,0 +1,3 @@
+-use taglibs
+-use Content-Encoding gzip
+-use https

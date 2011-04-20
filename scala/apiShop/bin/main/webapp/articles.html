@@ -1,0 +1,30 @@
+<lift:surround with="default" at="content">
+  <h2><lift:shopHeader.title /></h2>
+  <p>
+  <h4><lift:shopArticles.count /> Articles</h4>
+  <table>
+  <lift:shopArticles.list form="POST">
+        <tr>
+            <td>
+                <articles:image />
+            </td> 
+            <td> 
+                <articles:name /><br />
+                <articles:price /><br />
+                <articles:appearanceHidden />
+                <articles:appearances >
+                    <appearances:appearance />
+                </articles:appearances >
+                <br />
+                <articles:sizes >
+                    <sizes:size />
+                </articles:sizes >
+                <br />
+                <articles:cart />
+            </td>
+        </tr>
+  </lift:shopArticles.list >
+  </table>
+</p>
+</lift:surround>
+

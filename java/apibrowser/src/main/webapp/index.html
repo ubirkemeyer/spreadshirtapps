@@ -1,0 +1,363 @@
+<html>
+<head>
+    <title>Spreadshirt API Browser</title>
+    <script type="text/javascript" src="js/prototype.js"></script>
+    <script type="text/javascript" src="js/scriptaculous.js"></script>
+    <script type="text/javascript" src="js/modalbox.js"></script>
+    <script type="text/javascript" src="js/apibrowser.js"></script>
+    <link href="css/apibrowser.css" rel="stylesheet" type="text/css">
+    <link href="css/modalbox.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div style="position: absolute; height: 70px; width: 40px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height: 70px; width: 54px;"/></div>
+<div style="position: absolute; left: 70px; height: 70px; padding-top:15px; font-size: 30px; ">
+    Spreadshirt API Browser
+</div>
+<!-- edit options -->
+<div id="editBox"
+     style="position:absolute; top: 95px; width: 305px; height: 760px; left: 1110px;">
+    <form id="apiRequestForm" action="/">
+        <div style="margin-bottom: 2px; font-weight: bold;">Available Resources:</div>
+
+        <div style="float: left; margin-bottom: 3px; width: 80px; height: 30px;">Host:<br/>(<a
+                style="text-decoration: underline; cursor:pointer; cursor: hand; font-size: 10px;"
+                onclick="Modalbox.show($('hostNameBox'), {title: 'Edit Hosts', width: 300, afterLoad: HostDialogController.initHosts}); return false;">edit</a>)
+        </div>
+        <div style="margin-bottom: 3px; height: 30px;"><select id="hostList"
+                                                               style="width: 220px;"
+                                                               onchange="ApplicationController.reinit();">
+            <option value="api.spreadshirt.net">api.spreadshirt.net</option>
+            <option value="api.spreadshirt.com">api.spreadshirt.com</option>
+        </select></div>
+        <div style="margin-bottom: 3px; margin-right: 2px; text-align: right;"></div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Resource:</div>
+        <div style="margin-bottom: 3px;"><select id="resourceList" style="width: 220px;"
+                                                 onchange="Preferences.storePreferences(); ApplicationController.selectResource();"></select>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Method:</div>
+        <div style="margin-bottom: 3px;"><select id="resourceMethod" style="width: 220px;"
+                                                 onchange="Preferences.storePreferences(); ApplicationController.selectResourceMethod();"></select>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Description:</div>
+        <div style="margin-bottom: 3px; margin-left: 80px;"><textarea
+                id="resourceDescription" rows="5" cols="5" style="width: 220px;"
+                disabled></textarea></div>
+        <br/>
+
+        <div style="margin-bottom: 5px; font-weight: bold;">Session Data:</div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Locale:</div>
+        <div style="margin-bottom: 3px;"><select id="localeList" style="width: 220px;"
+                                                 onchange="Preferences.storePreferences(); ResponseDialogController.loadData();"></select>
+        </div>
+        <div style="float: left; width: 80px;">Compat&nbsp;Mode:</div>
+        <div style=" margin-bottom: 3px;"><input type="checkbox" id="compatMode"
+                                                 onclick="Preferences.storePreferences(); ResponseDialogController.loadData();"/>
+        </div>
+        <div style="margin-bottom: 3px; float: left; width: 80px;">API Key:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="apiKey" value="123456789"
+                                                style="width: 220px;"
+                                                onchange="Preferences.storePreferences(); ApplicationController.selectResourceMethod();"/>
+        </div>
+        <div style="margin-bottom: 3px; float: left; width: 80px;">Secret:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="secret" value="987654321"
+                                                style="width: 220px;"
+                                                onchange="Preferences.storePreferences(); ApplicationController.selectResourceMethod();"/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; height: 30px; width: 80px;">Session:<br/>(<a
+                style="text-decoration: underline; font-size: 10px; cursor:pointer; cursor: hand;"
+                onclick="Modalbox.show($('loginBox'), {title: 'Login (Create New Session)', width: 240}); return false;">change</a>)
+        </div>
+        <div style="margin-bottom: 3px; height: 30px;"><input type="text" id="sessionId"
+                                                              value="123"
+                                                              style="width: 220px;"
+                                                              onchange="Preferences.storePreferences(); ApplicationController.selectResourceMethod();"/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">User Id:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="userId" value="40000"
+                                                style="width: 220px;"
+                                                onchange="Preferences.storePreferences(); ApplicationController.updateUrlPlaceHolderValues(); ApplicationController.selectResourceMethod();"/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Shop Id:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="shopId" value="40000"
+                                                style="width: 220px;"
+                                                onchange="Preferences.storePreferences(); ApplicationController.updateUrlPlaceHolderValues(); ApplicationController.selectResourceMethod();"/>
+        </div>
+        <br/>
+
+        <div style="margin-bottom: 2px; font-weight: bold;">Request Data:</div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Input Url:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="url"
+                                                value=""
+                                                style="width: 220px;"
+                                                onchange="Preferences.storePreferences(); ResponseDialogController.loadData();"/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Method:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="method" value="GET"
+                                                style="width: 220px;" disabled readonly/>
+        </div>
+        <div style="float: left; width: 80px;">APIKey Protected:</div>
+        <div style=" margin-bottom: 3px; height: 35px;"><input type="checkbox"
+                                                               id="apiKeyProtected"
+                                                               checked disabled
+                                                               style="height: 35px;"/>
+        </div>
+        <div style="float: left; width: 80px;">SessionId Protected:</div>
+        <div style=" margin-bottom: 3px; height: 35px;"><input type="checkbox"
+                                                               id="sessionIdProtected"
+                                                               checked disabled
+                                                               style="height: 35px;"/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Time:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="time" value=""
+                                                style="width: 220px;" disabled readonly/>
+        </div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Data is:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="dataForEncoding"
+                                                value="" style="width: 220px;"
+                                                readonly/></div>
+        <div style="float: left; margin-bottom: 3px; width: 80px;">Encoded Url:</div>
+        <div style="margin-bottom: 3px;"><input type="text" id="encodedUrl" value=""
+                                                style="width: 220px;" readonly/>
+        </div>
+    </form>
+</div>
+<!-- history list -->
+<div style="position: absolute; left: 8px; top: 95px; z-index: 100;">
+    <div style="position: absolute; left: 12px; font-weight: bold;">History:</div>
+    <select id="historyList" style="position: absolute; left: 70px; width: 400px;"
+            onchange="History.loadHistoryLink();"></select>
+</div>
+<!-- response box -->
+<div id="responseBox"
+     style="position: absolute; overflow: hidden; left: 8px; top: 95px; width: 1120px; height: 740px;">
+    <div id="listOptionsBox"
+         style="position: absolute; left: 12px; margin-bottom: 5px; margin-top: 5px;top: 30px; height: 45px;">
+        <div style="margin-bottom: 3px; top: 3px; position: absolute; font-weight: bold;">
+            Options:
+        </div>
+        <div style="margin-bottom: 3px; left: 55px; top: 3px; position: absolute;">Full&nbsp;Data:</div>
+        <div style="margin-bottom: 3px; left: 115px; top: 1px; position: absolute;"><input
+                type="checkbox" id="fullData"
+                onclick="Preferences.storePreferences(); ResponseDialogController.loadData();"/>
+        </div>
+        <div style="margin-bottom: 3px; left: 144px; top: 3px; position: absolute;">
+            Limit:
+        </div>
+        <div style="margin-bottom: 3px; left: 184px; position: absolute;">
+            <select id="limit"
+                    onchange="Preferences.storePreferences(); ResponseDialogController.cleanEntries(); ResponseDialogController.loadData();"
+                    style="width: 50px;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select></div>
+        <div style="margin-bottom: 3px; left: 245px; top: 3px; position: absolute;">
+            Offset:
+        </div>
+        <div style="margin-bottom: 3px; left: 290px; position: absolute;">
+            <select id="entries"
+                    onchange="Preferences.storePreferences(); ResponseDialogController.loadData();"
+                    style="width: 70px;">
+                <option value="0">0</option>
+            </select></div>
+        <div style="margin-bottom: 3px; left: 370px; top: 3px; position: absolute;">
+            Render&nbsp;List:
+        </div>
+        <div style="margin-bottom: 3px; left: 440px; top: 1px; position: absolute;">
+            <input type="checkbox" id="renderList"
+                   onclick="Preferences.storePreferences(); ResponseDialogController.loadData();"/>
+        </div>
+    </div>
+    <div id="entityOptionsBox"
+         style="display: none; position: absolute; left: 12px; margin-bottom: 5px; margin-top: 5px;top: 30px; height: 45px;">
+        <div style="margin-bottom: 3px; top: 3px; position: absolute; font-weight: bold;">
+            Options:
+        </div>
+        <div style="margin-bottom: 3px; left: 55px; position: absolute;">
+            <input type="button" id="editDataButton" name="Edit" value="Edit" disabled
+                   style="width: 50px;"
+                   onclick="RequestDialogController.displayRequestBoxForReplace();"/>
+        </div>
+        <div style="margin-bottom: 3px; left: 115px; position: absolute;">
+            <input type="button" id="deleteDataButton" name="Delete" value="Delete"
+                   disabled onclick="RequestDialogController.deleteData();"/>
+        </div>
+    </div>
+    <div id="imageOptionsBox"
+         style="display: none; position: absolute; left: 12px; margin-bottom: 5px; margin-top: 5px;top: 30px; height: 45px;">
+        <div style="margin-bottom: 3px; top: 3px; position: absolute; font-weight: bold;">
+            Options:
+        </div>
+        <div style="margin-bottom: 3px; left: 55px; top: 3px; position: absolute;">Media&nbsp;Type:</div>
+        <div style="margin-bottom: 3px; left: 129px; position: absolute;">
+            <select style="width: 50px;" id="imageMediaType"
+                    onchange="Preferences.storePreferences(); ResponseDialogController.loadData();">
+                <option value="png">png</option>
+                <option value="jpg">jpg</option>
+            </select></div>
+        <div style="margin-bottom: 3px; left: 194px; top: 3px; position: absolute;">
+            Width:
+        </div>
+        <div style="margin-bottom: 3px; left: 234px; position: absolute;">
+            <select id="imageWidth"
+                    onchange="ResponseDialogController.synchImageSize('imageWidth'); Preferences.storePreferences(); ResponseDialogController.loadData();"
+                    style="width: 50px;">
+                <option value="42">42</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="190">190</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+                <option value="450">450</option>
+                <option value="500">500</option>
+                <option value="650">650</option>
+                <option value="700">700</option>
+                <option value="750">750</option>
+                <option value="800">800</option>
+                <option value="850">850</option>
+                <option value="900">900</option>
+                <option value="950">950</option>
+                <option value="1000">1000</option>
+                <option value="1050">1050</option>
+                <option value="1100">1100</option>
+                <option value="1150">1150</option>
+                <option value="1200">1200</option>
+            </select></div>
+        <div style="margin-bottom: 3px; left: 295px; top: 3px; position: absolute;">
+            Height:
+        </div>
+        <div style="margin-bottom: 3px; left: 340px; position: absolute;">
+            <select id="imageHeight"
+                    onchange="ResponseDialogController.synchImageSize('imageHeight'); Preferences.storePreferences(); ResponseDialogController.loadData();"
+                    style="width: 50px;">
+                <option value="42">42</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="190">190</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+                <option value="450">450</option>
+                <option value="500">500</option>
+                <option value="650">650</option>
+                <option value="700">700</option>
+                <option value="750">750</option>
+                <option value="800">800</option>
+                <option value="850">850</option>
+                <option value="900">900</option>
+                <option value="950">950</option>
+                <option value="1000">1000</option>
+                <option value="1050">1050</option>
+                <option value="1100">1100</option>
+                <option value="1150">1150</option>
+                <option value="1200">1200</option>
+            </select></div>
+        <div style="margin-bottom: 3px; left: 400px; top: 3px; position: absolute;">Synch&nbsp;Size:</div>
+        <div style="margin-bottom: 3px; left: 465px; top: 1px; position: absolute;"><input
+                type="checkbox" id="synchImageSize"
+                onclick="ResponseDialogController.synchImageSize('imageWidth'); Preferences.storePreferences();"/>
+        </div>
+    </div>
+    <div id="responseScrollBox"
+         style="position:absolute; left: 12px; top: 75px; width:1100px; height: 740px; overflow:auto; background-color: #DDDDDD; border: 1px solid #333333;"
+         onkeyup="History.storeScrollPositionInHistoryLink();"
+         onmouseup="History.storeScrollPositionInHistoryLink();"
+         onscroll="History.storeScrollPositionInHistoryLink();">
+        <div id="response" style="padding: 5px; color: black; font-family: monospace;">
+            &nbsp;</div>
+    </div>
+</div>
+<!-- request box -->
+<div id="requestBox"
+     style="display: none; position: absolute; overflow: hidden; left: 8px; top: 95px; width: 1120px; height: 740px;">
+    <form id="requestForm" action="/">
+        <div id="postBox"
+             style="position: absolute; left: 12px; margin-bottom: 5px; margin-top: 5px;top: 30px; height: 45px;">
+            <div style="margin-bottom: 3px; top: 3px; position: absolute; font-weight: bold;">
+                Options:
+            </div>
+            <div style="left: 55px; top: 3px; position: absolute;">
+                Templates:
+            </div>
+            <div style="left: 127px; top: 1px; position: absolute;">
+                <select style="width: 160px;" id="templates"
+                        onchange="RequestDialogController.addTemplateData();"></select>
+            </div>
+            <div style="left: 295px; width: 100px; position: absolute;">
+                <input type="button" name="Add Template" value="Add Template"
+                       onclick="RequestDialogController.addTemplateData();">
+            </div>
+            <div style="left: 420px; width: 50px; position: absolute;">
+                <input type="button" name="Submit" value="Submit"
+                       onclick="RequestDialogController.submitData();">
+            </div>
+            <div style="left: 490px; width: 50px; position: absolute;">
+                <input type="button" name="Cancel" value="Cancel"
+                       onclick="RequestDialogController.cancelEdit();">
+            </div>
+        </div>
+        <textarea id="request" rows="5" cols="5"
+                  style="position:absolute; left: 12px; top: 75px; width:1100px; height: 740px;color: black; font-family: monospace;"></textarea>
+    </form>
+</div>
+<div id="image"
+     style="z-index: 50; display:none; background-color: #FFFFFF; position: absolute; top: 150px; left: 150px; border: 1px solid #333333;">
+    &nbsp;</div>
+<!-- hostname edit box -->
+<div id="hostNameBox" style="display: none;">
+    <form action="">
+        <div style="margin-bottom: 3px;">Existing Hosts:</div>
+        <div style="margin-bottom: 3px;">
+            <select id="editHostList" style="width: 220px;">
+                <option></option>
+            </select><input type="button" value="remove" style="width: 60px;"
+                            onclick="HostDialogController.deleteHost();"></div>
+        <div style="margin-bottom: 3px;">New Hosts:</div>
+        <div style="margin-bottom: 3px;"><input id="newHost" type="text"
+                                                style="width: 220px;"><input type="button"
+                                                                             value="add"
+                                                                             style="width: 60px;"
+                                                                             onclick="HostDialogController.addHost();">
+        </div>
+        <div>&nbsp;</div>
+        <div style="width: 280px; text-align: center;"><input type="button" value="update"
+                                                              style="width: 60px;"
+                                                              onclick="Modalbox.hide(); HostDialogController.synchronizeHosts();">
+        </div>
+    </form>
+</div>
+<!-- login edit box -->
+<div id="loginBox" style="display: none;">
+    <form action="">
+        <div id="loginError"
+             style="display: none; background-color: #ffcccc; color: #ff0000; border: 1px solid #ff0000; font-weight: bold; width: 210px; margin-bottom: 10px; margin-top: 5px; padding: 5px;"></div>
+        <div style="margin-bottom: 3px;">Username:</div>
+        <div style="margin-bottom: 3px;"><input id="username" type="text"
+                                                style="width: 220px;"></div>
+        <div style="margin-bottom: 3px;">Password:</div>
+        <div style="margin-bottom: 3px;"><input id="password" type="password"
+                                                style="width: 220px;"></div>
+        <div>&nbsp;</div>
+        <div style="width: 220px; text-align: center;"><input type="button" value="login"
+                                                              style="width: 60px;"
+                                                              onclick="LoginDialogController.login();">
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    ApplicationController.resizeApp();
+    ApplicationController.init();
+</script>
+</body>
+</html>       

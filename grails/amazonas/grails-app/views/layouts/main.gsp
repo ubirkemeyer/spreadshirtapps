@@ -1,0 +1,18 @@
+<html>
+<head>
+  <title><g:layoutTitle default="Amazonas"/></title>
+  <link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}"/>
+  <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"/>
+  <g:layoutHead/>
+  <g:javascript library="application"/>
+</head>
+<body>
+<div id="spinner" class="spinner" style="display:none;">
+  <img src="${resource(dir: 'images', file: 'spinner.gif')}" alt="${message(code: 'spinner.alt', default: 'Loading...')}"/>
+</div>
+<div id="amazonasLogo" style="float:left"><g:link controller="export"><img src="${resource(dir: 'images', file: 'spreadshirt_it.jpg')}" alt="Amazonas" <g:if test="${version}">title="Version ${version}"</g:if> border="0"/></g:link></div>
+<div style="padding-top:40px;padding-left:90px;font-family:Verdana;font-size:xx-large;color:#82786F">Amazonas</div>
+<div style="clear:left"/>
+<g:layoutBody/>
+</body>
+</html>

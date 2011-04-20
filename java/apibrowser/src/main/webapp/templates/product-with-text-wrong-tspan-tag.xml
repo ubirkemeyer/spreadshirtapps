@@ -1,0 +1,28 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="95"/>
+    <appearance id="2"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="text">
+            <printArea id="154"/>
+            <printType id="14"/>
+            <offset unit="mm">
+                <x>20.0</x>
+                <y>20.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <text transform="" font-style="normal" font-size="36"
+                          font-weight="normal" font-family="BelloScript"
+                          text-anchor="start" y="110" x="1" printColorId="12"><tspan>Miss  <tspan>Universe</tspan></tspan></text>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>

@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Simplomat Demo - Banner ...</title>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/ext/raphael.js"></script>
+<script type="text/javascript" src="js/simplomat.js"></script>
+<script type="text/javascript" src="js/customsimplomat.js"></script>
+<script type="text/javascript" src="js/spreadshirtapi.js"></script>
+<script>
+var spreadshirtAPI;
+var simplomat;
+var simplomat1;
+
+window.onload = function () {
+    spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+    simplomat = new Simplomat().init("designer1", 400, spreadshirtAPI, true, true, "http://demoapp.spreadshirt.net/simplomat/extimg/himmel_blau_wolken.jpg", "6", null, null, null, -100, 100, 200, 675);
+    simplomat1 = new Simplomat().init("designer2", 400, spreadshirtAPI, true, true, "http://demoapp.spreadshirt.net/simplomat/extimg/himmel_blau_wolken.jpg", "6", null, null, null, 250, -30, 675, 200);
+
+    setTimeout(function () {
+        simplomat.R.safari();
+        simplomat1.R.safari();
+
+    });
+};
+</script>
+</head>
+<body>
+<div style="width: 1200px;">
+    <div id="designer1" style="float: left; width: 200px; height: 675px; border: 1px solid black; background-image: url('img/palmen.jpg'); padding-left: -150px;">&nbsp;</div>
+    <div style="float: left;">&nbsp;</div>
+    <div id="designer2" style="float: left; width: 900px; height: 200px; border: 1px solid black; background-image: url('img/palmen.jpg'); padding-left: -150px;">&nbsp;</div>
+</div>
+</body>
+</html>

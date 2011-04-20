@@ -1,0 +1,37 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="95"/>
+    <appearance id="1"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="text">
+            <printArea id="154"/>
+            <!-- digital direct print type - use rgb colors instead of fixed print colors !!! -->
+            <printType id="1"/>
+            <offset unit="mm">
+                <x>1.0</x>
+                <y>1.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <text transform="" font-style="normal" font-size="52"
+                          font-weight="normal" font-family="Stop"
+                          text-anchor="start" y="110" x="30">
+                        <tspan fill="#EAEC36">Techno&#x26;</tspan>
+                        <tspan y="170" x="30" fill="#FF3484">House&#x26;</tspan>
+                        <tspan y="230" x="30" fill="#521973">Acid&#x26;</tspan>
+                        <tspan y="290" x="30" fill="#9DC8D9">Jazz!</tspan>
+                    </text>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>
+
+
+

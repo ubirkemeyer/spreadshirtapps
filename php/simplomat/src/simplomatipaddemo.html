@@ -1,0 +1,535 @@
+<html>
+<head>
+<title>Simplomat IPad Demo</title>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-size: 75%;
+        color: #222;
+        background: #ffffff;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.6em;
+    }
+
+    .appearanceSelector {
+        margin: 2px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+     .viewSelector {
+        margin: 2px;
+        border: black solid 2px;
+        float: left;
+        width: 70px;
+        height: 70px;
+        color: black;
+        cursor: pointer;
+        background-color: #FFFFFF;
+    }
+
+    .sizeSelector {
+        margin: 2px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        background-color: #FFFFFF;
+    }
+
+    .price {
+        padding: 15px;
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 10px;
+        left: 590px;
+        width: 230px;
+    }
+
+    .views {
+           position: absolute;
+           top: 10px;
+           left: 10px;
+           width: 190px;
+       }
+
+
+    .appearances {
+        position: absolute;
+        top: 10px;
+        left: 190px;
+        width: 400px;
+    }
+
+    .menu {
+        position: absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+        background-color: #F5F4F4;
+    }
+
+    .designer {
+        position: absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+    }
+
+    .submitButton {
+        right: 10px;
+        bottom: 15px;
+        width: 150px;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .ui-tabs-hide {
+        display: none;
+    }
+
+    .widget {
+        width: 360px;
+        height: 480px;
+        background: #f5f4f4;
+        border: 1px solid #dedbd1;
+        top: 10px;
+        right: 0px;
+        position: absolute;
+    }
+
+    .tabnav {
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .tabnav li {
+        display: inline;
+        list-style: none;
+        padding-right: 5px;
+    }
+
+    .tabnav li a {
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #222;
+        font-weight: bold;
+        padding: 4px 6px;
+        outline: none;
+    }
+
+    .tabnav li a:hover, .tabnav li a:active, .tabnav li.ui-tabs-selected a {
+        background: #e7e6e6;
+        color: #222;
+        text-decoration: none;
+    }
+
+    .tabdiv {
+        margin: 0px 10px 10px 10px;
+        background: #fff;
+        border: 1px solid #dedbd1;
+        padding: 5px;
+        height: 435px;
+        overflow: hidden;
+    }
+
+    .tabdiv li {
+        margin-left: 20px;
+    }
+
+    .toggleTabs {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        font-size: 12px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/ext/raphael.js"></script>
+<script type="text/javascript" src="js/simplomat.js"></script>
+<script type="text/javascript" src="js/spreadshirtapi.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+<script>
+var spreadshirtAPI = null;
+var simplomat = null;
+var currentSize = null;
+var currentAppearance = null;
+var currentView = null;
+var currentHeadline = null;
+var design = null;
+var synchronized = false;
+var tabsVisible = true;
+var initId = null;
+var designSearchController;
+var productTypeSearchController;
+
+window.onload = function () {
+    spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+
+    simplomat = new Simplomat();
+    simplomat.priceChangedCallback = function() {
+        $("#price").html(this.product.getFormatedPrice());
+    };
+    simplomat.initCallback = function() {
+        initViews();
+        initAppearances();
+        initSizes();
+        currentView = simplomat.product.viewId;
+        $('#view_' + currentView).addClass('selected');
+        currentAppearance = simplomat.product.appearanceId;
+        $('#appearance_' + currentAppearance).addClass('selected');
+    };
+    simplomat.sizeChangedCallback = function() {
+        if (currentSize != null)
+            $('#size_' + currentSize).removeClass('selected');
+        currentSize = simplomat.product.sizeId;
+        $('#size_' + currentSize).addClass('selected');
+    };
+    simplomat.appearanceChangedCallback = function() {
+        if (currentAppearance != null)
+            $('#appearance_' + currentAppearance).removeClass('selected');
+        currentAppearance = simplomat.product.appearanceId;
+        $('#appearance_' + currentAppearance).addClass('selected');
+
+        initViews();
+        initSizes();
+
+        if (currentSize != null && $('#size_' + currentSize) != null)
+            $('#size_' + currentSize).addClass('selected');
+        if (currentView != null && $('#view_' + currentView) != null)
+            $('#view_' + currentView).addClass('selected');
+    };
+    simplomat.viewChangedCallback = function() {
+        if (currentView != null)
+            $('#view_' + currentView).removeClass('selected');
+        currentView = simplomat.product.viewId;
+        $('#view_' + currentView).addClass('selected');
+    };
+    simplomat.productTypeChangedCallback = function() {
+        initViews();
+        initAppearances();
+        initSizes();
+        currentView = simplomat.product.viewId;
+        $('#view_' + currentView).addClass('selected');
+        currentAppearance = simplomat.product.appearanceId;
+        $('#appearance_' + currentAppearance).addClass('selected');
+        currentSize = simplomat.product.sizeId;
+        $('#size_' + currentSize).addClass('selected');
+    };
+    simplomat.errorCallback = function(errorCode, errorMessage) {
+        alert(errorMessage);
+    };
+    simplomat.init("designer", 700, spreadshirtAPI, true, true, null, "6", "1", null, "digi", -20, 0, 980, 500);
+    simplomat.product.changeAppearance(simplomat.product.appearanceId);
+
+    designSearchController = new SearchController("design", "designSearchController", 30,
+            function (query, offset, limit) {
+                var designs = spreadshirtAPI.getMarketplaceDesigns(offset, limit, query);
+                var count = (designs == null) ? 0 : designs.attr("count");
+                var searchResult = new SearchResult(query, count, offset, limit, new Array());
+                if (designs != null) {
+                    designs.children("design").each(function () {
+                        var design = $(this);
+                        searchResult.entries.push(new SearchResultEntry(
+                                design.attr("xlink:href").substr(design.attr("xlink:href").lastIndexOf("/") + 1),
+                                design.children("name") != null ? design.children("name").text() : "",
+                                design.children("description") != null ? design.children("description").text() : "",
+                                design.children("resources").children("resource").attr("xlink:href") + "?width=50&height=50&backgroundColor=none",
+                                50, 50,
+                                design.children("resources").children("resource").attr("xlink:href")));
+                    });
+                }
+                return searchResult;
+            },
+            function (entry) {
+                simplomat.product.currentView.addDesignById(entry.id);
+                var design = spreadshirtAPI.getDesign(entry.id);
+                if (design != null) {
+                    var tagElement = design.children("tags");
+                    if (tagElement != null) {
+                        var tags = tagElement.text().split(",");
+                        var tagDiv = $('#designSearchTags');
+                        tagDiv.html("");
+                        tagDiv.append("Tags:&nbsp;");
+                        for (var i in tags) {
+                            tagDiv.append("<a href=\"javascript:designSearchController.refineSearch('" + $.trim(tags[i]) + "');\">" + $.trim(tags[i]) + "</a> ");
+                        }
+                    }
+                } else {
+                    $('#designSearchTags').html("Tags: -");
+                }
+            },
+            null,
+            function () {
+                if (!simplomat.pixelAllowed) {
+                    this.executedQuery += " +vector:(true)";
+                }
+            },
+            null, null, null, null);
+    designSearchController.spreadshirtAPI = this.spreadshirtAPI;
+    designSearchController.addUserFilter = function() {
+        if (this.currentEntry != null) {
+            var design = this.spreadshirtAPI.getDesign(this.currentEntry.id);
+            if (design != null)
+                this.refineSearch("+userIds:(" + design.children("user").attr("id") + ")");
+        }
+    };
+    designSearchController.conductSearch();
+
+    productTypeSearchController = new SearchController("productType", "productTypeSearchController", 54,
+            function (query, offset, limit) {
+                if (this.entries === null) {
+                    var entries = new Array();
+                    var count = 0;
+                    var productTypes = spreadshirtAPI.getProductTypes(0, 1000, true);
+                    if (productTypes != null) {
+                        productTypes.children("productType").each(function () {
+                            var productType = $(this);
+                            var appearances = simplomat.product.productPartsFactory.createAppearances(productType);
+                            var views = simplomat.product.productPartsFactory.createViews(productType);
+                            if (views.length > 0 && appearances.length > 0) {
+                                entries.push(new SearchResultEntry(
+                                        productType.attr("xlink:href").substr(productType.attr("xlink:href").lastIndexOf("/") + 1),
+                                        productType.children("name") != null ? productType.children("name").text() : "",
+                                        productType.children("description") != null ? productType.children("description").text() : "",
+                                        productType.children("resources").children("resource").attr("xlink:href") + "?width=50&height=50&backgroundColor=none",
+                                        50, 50,
+                                        productType.children("resources").children("resource").attr("xlink:href")));
+                                count++;
+                            }
+                        });
+                    }
+                    this.count = count;
+                    this.entries = entries;
+                }
+                var searchResult = new SearchResult(query, this.count, offset, limit, new Array());
+                for (var i = 0; i < this.entries.length; i++) {
+                    if (i >= offset && i < limit) {
+                        searchResult.entries.push(this.entries[i]);
+                    }
+                }
+                return searchResult;
+            },
+            function (entry) {
+                simplomat.product.changeProductType(entry.id);
+            },
+            null, null, null, null, null, null);
+    productTypeSearchController.count = null;
+    productTypeSearchController.entries = null;
+
+    setTimeout(function () {
+        for (i in simplomat) {
+            simplomat.R.safari();
+        }
+    });
+};
+
+$(function() {
+    $("#tabs").tabs();
+    $("#tabs").tabs('select', '#tabs-1');
+    $('#tabs').bind('tabsselect', function(event, ui) {
+        if (ui.index == 1)
+            productTypeSearchController.conductSearch();
+    });
+});
+
+function initSizes() {
+    $("#sizes").html("");
+    for (var i = 0; i < simplomat.product.sizes.length; i++) {
+        var size = simplomat.product.sizes[i];
+        var availableSizes = simplomat.product.getAvailableSizes();
+        var available = false;
+        for (var j = 0; j < availableSizes.length; j++) {
+            if (availableSizes[j] == size.id) {
+                available = true;
+                break;
+            }
+        }
+        var onclick = "";
+        var state = "";
+        if (available) {
+            onclick = "javascript:simplomat.product.changeSize('" + size.id + "')";
+        } else {
+            state = " disabled";
+        }
+        $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+    }
+}
+
+function initAppearances() {
+    $("#appearances").html("");
+    for (var i = 0; i < simplomat.product.appearances.length; i++) {
+        var appearance = simplomat.product.appearances[i];
+        $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" + appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+    }
+}
+
+function initViews() {
+    $("#views").html("");
+    for (var i = 0; i < simplomat.product.views.length; i++) {
+        var view = simplomat.product.views[i];
+        if (view.id == "1" || view.id == "2") {
+            $("#views").append("<img id=\"view_" + view.id + "\" class=\"viewSelector\" onclick=\"javascript:simplomat.product.changeView('" + view.id + "')\" src=\"" + simplomat.product.createViewImageUrl(view.id, simplomat.product.appearanceId, 75) + "\" width=\"70\" height=\"70\"/>");
+        }
+    }
+}
+
+
+function toggleTabs() {
+    if (tabsVisible) {
+        $('#tabs').hide();
+        $('#toggleTabs').text("Show");
+        tabsVisible = false;
+    } else {
+        $('#tabs').show();
+        $('#toggleTabs').text("Hide");
+        tabsVisible = true;
+    }
+}
+</script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+            src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+            style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="views" class="views"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!"
+                   onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+    <div id="tabs" class="widget">
+        <ul class="tabnav">
+            <li><a href="#tabs-1">Designs</a></li>
+            <li><a href="#tabs-2">Product Types</a></li>
+        </ul>
+        <div id="tabs-1" class="tabdiv">
+            <b>Search on Spreadshirt Marketplace</b>
+
+            <form id="designSearchForm" style="margin: 0px;">
+                <input id="designSearchField" type="input" style="width: 260px;"/>
+                <input id="designSearchButton" type="button" style="width: 60px;"
+                       value="Search"/>
+            </form>
+            <a href="javascript:designSearchController.addUserFilter();">More from
+                designer</a>
+
+            <div id="designSearchTags"
+                 style="width: 100%; font-size: 12px; overflow: auto; height: 65px; margin-top: 5px;">
+                Tags: -
+            </div>
+            <div style="margin-top: 5px;">
+                <div style="float: left; width: 70px; margin-left: 5px;"><a
+                        id="designSearchPrevious"
+                        style="display:none;">Previous</a>&nbsp;
+                </div>
+                <div style="float: left; width: 170px; text-align: center;"
+                     id="designSearchCount">&nbsp;</div>
+                <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                        id="designSearchNext" style="display:none;">Next</a></div>
+            </div>
+            <div id="designSearchResult"
+                 style="clear: left; width: 100%; display: none;">
+                <div style="width: 50px; height: 50px;  margin: 1px; float: left; border: 1px solid #ccc;">
+                    <img id="#id#" src="#src#" width="#width#" height="#height#"
+                         onclick=""
+                         style="border: 0px; cursor: pointer;"/></div>
+            </div>
+        </div>
+        <div id="tabs-2" class="tabdiv">
+            <form id="productTypeSearchForm" style="margin: 0px; display: none;">
+                <input id="productTypeSearchField" type="input"
+                       style="width: 260px;"/>
+                <input id="productTypeSearchButton" type="button"
+                       style="width: 60px;" value="Search"/>
+            </form>
+            <div style="margin-top: 5px;">
+                <div style="float: left; width: 70px; margin-left: 5px;"><a
+                        id="productTypeSearchPrevious"
+                        style="display:none;">Previous</a>&nbsp;</div>
+                <div style="float: left; width: 170px; text-align: center;"
+                     id="productTypeSearchCount">&nbsp;</div>
+                <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                        id="productTypeSearchNext" style="display:none;">Next</a>
+                </div>
+            </div>
+            <div id="productTypeSearchResult" style="width: 100%;">
+                <div style="float:left; width: 50px; height: 50px; margin: 1px; float: left; border: 1px solid #ccc;">
+                    <img id="#id#" src="#src#" width="#width#" height="#height#"
+                         onclick="" style="border: 0px; cursor: pointer;"/></div>
+            </div>
+        </div>
+    </div>
+    <div id="toolbar" style="position: absolute; left: 10px; top: 450px;">
+        <img src="img/rotateleft.png" width="30" height="30"
+             style="border: 2px solid black; margin: 3px; float: left; cursor: pointer;"
+             onclick="javascript:simplomat.product.currentView.currentDesign.rotate(-45);"/>
+        <img src="img/rotateright.png" width="30" height="30"
+             style="border: 2px solid black; margin: 3px; float: left; cursor: pointer;"
+             onclick="javascript:simplomat.product.currentView.currentDesign.rotate(45);"/>
+        <img src="img/zoomin.png" width="30" height="30"
+             style="border: 2px solid black; margin: 3px; float: left; cursor: pointer;"
+             onclick="javascript:simplomat.product.currentView.currentDesign.zoom(0.1);"/>
+        <img src="img/zoomout.png" width="30" height="30"
+             style="border: 2px solid black; margin: 3px; float: left; cursor: pointer;"
+             onclick="javascript:simplomat.product.currentView.currentDesign.zoom(-0.1);"/>
+        <img src="img/trash.png" width="30" height="30"
+             style="border: 2px solid black; margin: 3px; float: left; cursor: pointer;"
+             onclick="javascript:simplomat.product.currentView.currentDesign.remove();"/>
+    </div>
+    <div id="toggleTabs" class="toggleTabs" onclick="javascript:toggleTabs();">Hide</div>
+</div>
+</body>
+</html>

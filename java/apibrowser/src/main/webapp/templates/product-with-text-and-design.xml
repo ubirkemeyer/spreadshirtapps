@@ -1,0 +1,46 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType id="6"/>
+    <appearance id="2"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="design">
+            <printArea id="4"/>
+            <printType id="2"/>
+            <offset unit="mm">
+                <x>100</x>
+                <y>85</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <image transform="" height="200.025" width="109.008333333" printColorIds="1,8" designId="m2484607-2"/>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+       <configuration type="text">
+            <printArea id="4"/>
+            <printType id="2"/>
+            <offset unit="mm">
+                <x>100.0</x>
+                <y>135.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <text transform="" font-style="normal" font-size="44"
+                          font-weight="normal" font-family="BelloScript"
+                          text-anchor="start" y="65" x="1" printColorId="1">
+                        <tspan>Heidi</tspan>
+                    </text>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>

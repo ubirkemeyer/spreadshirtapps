@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+    <display-name>API Browser</display-name>
+    <servlet>
+        <servlet-name>HttpGateway</servlet-name>
+        <servlet-class>net.sprd.apibrowser.HttpGateway</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>HttpGateway</servlet-name>
+        <url-pattern>/httpgateway</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+       <welcome-file>index.jsp</welcome-file>
+       <welcome-file>index.html</welcome-file>
+     </welcome-file-list>
+</web-app>

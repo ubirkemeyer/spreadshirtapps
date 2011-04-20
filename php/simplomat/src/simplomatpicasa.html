@@ -1,0 +1,388 @@
+<html>
+<head>
+    <title>Simplomat Picasa Photos on a Shirt Demo</title>
+    <style type="text/css">
+    body, div, p, td, form, input, select, textarea {
+        font: 12px Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    .appearanceSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 30px;
+        height: 30px;
+        color: black;
+        cursor: pointer;
+    }
+
+    .sizeSelector {
+        margin: 4px;
+        border: black solid 2px;
+        float: left;
+        width: 55px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .price {
+        position:absolute;
+        right: 10px;
+        top: 0px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .selected {
+        border-color: orange;
+        color: orange;
+    }
+
+    .disabled {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+    .sizes {
+        position: absolute;
+        top: 5px;
+        left: 500px;
+        width: 300px;
+    }
+
+    .appearances {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        width: 450px;
+    }
+
+    .menu {
+        position:absolute;
+        margin-top: 500px;
+        width: 980px;
+        height: 100px;
+        border-top: 2px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .designer {
+        position:absolute;
+    }
+
+    .application {
+        position: absolute;
+        width: 980px;
+        height: 600px;
+     }
+
+    .submitButton {
+        right: 10px;
+        bottom: 10px;
+        width: 150px;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .toolBox {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 330px;
+        height: 500px;
+        background-color: white;
+        overflow: hidden;
+    }
+    .toolBox h1 {
+        font-size: 25px;
+        font-weight: bold;
+        margin-left: 0px;
+        margin-bottom: 0px;
+    }
+     .toolBoxEntry {
+        font-size: 15px;
+        margin-top: 5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 1px;
+         padding-top: 3px;
+         padding-bottom: 5px;
+        cursor: pointer;
+         float: left;
+     }
+
+     .toolBoxEntryLink {
+         text-decoration: none;
+         color: black;
+     }
+
+    .toolBoxEntryStoryLink {
+         color: black;
+        font-size: 11px;
+     }
+
+    .toolBoxEntryStoryLink a:hover {
+         color: orange;
+     }
+
+    .toolBoxEntryStoryLink a:visited {
+         color: lightgray;
+     }
+
+     .toolBoxEntry a:hover {
+         text-decoration: none;
+         color: orange;
+     }
+
+     .selectedEntry {
+         font-weight: bold;
+         color: orange;
+     }
+     .toggleBox {
+         position: absolute;
+        right: 5px;
+        top: 5px;
+        font-size: 12px;
+         text-decoration: underline;
+         cursor: pointer;
+     }
+    </style>
+    <script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/ext/raphael.js"></script>
+    <script type="text/javascript" src="js/simplomat.js"></script>
+    <script type="text/javascript" src="js/spreadshirtapi.js"></script>
+   <script type="text/javascript" src="js/search.js"></script>
+    <script type="text/javascript" src="js/picasa.js"></script>
+    <script>
+        var spreadshirtAPI = null;
+        var picasaAPI;
+        var simplomat = null;
+        var currentSize = null;
+        var currentAppearance = null;
+        var currentHeadline = null;
+        var design = null;
+        var synchronized = false;
+        var newsVisible = true;
+        var initId = null;
+
+        var picasaLoginController;
+        var picasaUserImageController;
+
+        window.onload = function () {
+            spreadshirtAPI = new SpreadshirtAPI("eu", "524251", true);
+            picasaAPI = new PicasaAPI();
+            simplomat = new Simplomat();
+            simplomat.priceChangedCallback = function() {
+                $("#price").html(this.product.getFormatedPrice());
+            };
+            simplomat.initCallback = function() {
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                $("#appearances").html("");
+                for (var i = 0; i < this.product.appearances.length; i++) {
+                    var appearance = this.product.appearances[i];
+                    $("#appearances").append("<img id=\"appearance_" + appearance.id + "\" class=\"appearanceSelector\" onclick=\"javascript:simplomat.product.changeAppearance('" +  appearance.id + "')\" src=\"" + appearance.imageUrl + "\" width=\"30\" height=\"30\"/>");
+                }
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+            };
+            simplomat.sizeChangedCallback = function() {
+                if (currentSize != null)
+                    $('#size_' + currentSize).removeClass('selected');
+                currentSize = simplomat.product.sizeId;
+                $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.appearanceChangedCallback = function() {
+                if (currentAppearance != null)
+                    $('#appearance_' + currentAppearance).removeClass('selected');
+                currentAppearance = simplomat.product.appearanceId;
+                $('#appearance_' + currentAppearance).addClass('selected');
+
+                $("#sizes").html("");
+                for (var i = 0; i < this.product.sizes.length; i++) {
+                    var size = this.product.sizes[i];
+                    var availableSizes = this.product.getAvailableSizes();
+                    var available = false;
+                    for (var j = 0; j < availableSizes.length; j++) {
+                        if (availableSizes[j] == size.id) {
+                            available = true;
+                            break;
+                        }
+                    }
+                    var onclick = "";
+                    var state = "";
+                    if (available) {
+                        onclick = "javascript:simplomat.product.changeSize('" +  size.id + "')";
+                    } else {
+                       state = " disabled";
+                    }
+                    $("#sizes").append("<div id=\"size_" + size.id + "\" class=\"sizeSelector " + state + "\" onclick=\"" + onclick + "\">" + size.name + "</div>");
+                }
+                if (currentSize != null && $('#size_' + currentSize) != null)
+                    $('#size_' + currentSize).addClass('selected');
+            };
+            simplomat.errorCallback = function(errorCode, errorMessage) {
+                alert(errorMessage);
+            };
+            simplomat.init("designer", 700, spreadshirtAPI, true, true, null, "6", "1", null, "digi", -20, 0, 980, 500);
+            simplomat.product.changeAppearance(simplomat.product.appearanceId);
+
+            picasaUserImageController = new SearchController("picasaUser", "picasaUserImageController", 16,
+                function (query, offset, limit) {
+                    var feed = null;
+                    var user = query != undefined && query != null && query != "" ? query : 'default';
+                    if (this.album != undefined && this.album != null)
+                        feed = picasaAPI.getImages(user, this.album, offset, limit);
+                    else
+                        feed = picasaAPI.getUploadedImages(user, offset, limit);
+                    var searchResult = null;
+                    if (feed == null) {
+                        searchResult = new SearchResult(query, 0, 0, limit, new Array());
+                    } else {
+                        var countNode = feed.children("[nodeName=openSearch:totalResults]");
+                        var count = (countNode == null) ? 0 : feed.children("[nodeName=openSearch:totalResults]").text();
+                        searchResult = new SearchResult(query, count, offset, limit, new Array());
+                        var i = 0;
+                        feed.children("entry").each(function () {
+                            var entry = $(this);
+                            var thumbnail = $(this).children("[nodeName=media:group]").children("[nodeName=media:thumbnail]");
+                            var src = $(this).children("[nodeName=content]");
+                            searchResult.entries.push(new SearchResultEntry("" + i, "", "",
+                                    thumbnail.attr("url"), Number(thumbnail.attr("width")),
+                                    Number(thumbnail.attr("height")),
+                                    src.attr("src")));
+                            i++;
+                        });
+                    }
+                    return searchResult;
+                },
+                function (entry) {
+                    simplomat.product.currentView.addDesign(entry.imageUrl);
+                },
+                function () {
+                    $("#picasaSearch").hide();
+                    $("#picasaUser").show();
+
+                    var albums = picasaAPI.getAlbums(this.getCurrentQuery());
+                    var picasaUserAlbums = $("#picasaUserAlbums");
+                    picasaUserAlbums.html("Albums: ");
+                    if (albums != null) {
+                        albums.children("entry").each(function() {
+                            var title = $(this).children("[nodeName=title]");
+                            var album = $(this).children("[nodeName=gphoto:id]");
+                            if (title != null && album != null)
+                                picasaUserAlbums.append("<a href=\"javascript:picasaUserImageController.setAlbum('" + album.text() + "')\">" + title.text() + "</a>&nbsp;");
+                        });
+                    }
+                },
+                null, null, null, null, null);
+            picasaUserImageController.setAlbum = function(album) {
+                this.album = album;
+                this.conductSearch();
+            };
+
+            picasaLoginController = new PicasaLoginController(picasaAPI, function () {
+                $("#picasaLogin").hide();
+                $("#picasaUser").show();
+                picasaUserImageController.conductSearch();
+            });
+
+            picasaLoginController.initPicasa();
+
+            setTimeout(function () {
+                for (i in simplomat) {
+                    simplomat.R.safari();
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+<div class="application">
+    <div style="position: absolute; left: 5px; height: 50px; width: 41px;"><img
+        src="img/spreadshirt_logo.jpg" alt="Spreadshirt Logo"
+        style="height:  100px; width: 82px;"/></div>
+    <div id="designer" class="designer">&nbsp;</div>
+    <div class="menu">
+        <form action="javascript:simplomat.createProductAndCheckout();">
+            <div id="appearances" class="appearances"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="price" class="price">0,00</div>
+            <input class="submitButton" type="button" name="Buy Now!" value="Buy Now!" onclick="javascript:simplomat.createProductAndCheckout();"/>
+        </form>
+    </div>
+    <div></div>
+    <div id="toolBox" class="toolBox">
+        <h1>Picasa Web Albums</h1>
+        <div id="picasaLogin">
+            <br/>
+            <a href="https://www.google.com/accounts/AuthSubRequest?scope=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&session=1&secure=0&next=http%3A%2F%2Flocalhost%2Fsimplomat%2Fsimplomatpicasa.html" title="Connect to picasa web albums"><img src="img/Picasaweblogo-de.gif"/></a>
+            <br/><br/>
+            Please click on the image above to connect to your Picasa web albums. Clicking on the image will forward you to a
+            Google authorization page where you might need to login - in case you are not already - and grant access to your
+            Picasa web albums to this application.
+        </div>
+        <div id="picasaUser" style="width: 100%; display: none;">
+            <form id="picasaUserSearchForm" style="margin: 0px;">
+                <input id="picasaUserSearchField" type="input"
+                       style="width: 220px;"/>
+                <input id="picasaUserSearchButton" type="submit"
+                       style="width: 100px;"
+                       value="Change User"/>
+            </form>
+            <div id="picasaUserAlbums"
+                 style="width: 100%; overflow: auto; height: 60px; margin-top: 5px;">
+                &nbsp;</div>
+            <div style="margin-top: 5px;">
+                <div style="float: left; width: 70px; margin-left: 5px;"><a
+                        id="picasaUserSearchPrevious"
+                        style="display:none;">Previous</a>&nbsp;</div>
+                <div style="float: left; width: 170px; text-align: center;"
+                     id="picasaUserSearchCount">&nbsp;</div>
+                <div style="float: left; width: 70px; text-align: right;">&nbsp;<a
+                        id="picasaUserSearchNext"
+                        style="display:none;">Next</a></div>
+            </div>
+            <div id="picasaUserSearchResult" style="width: 100%;">
+                <div style="float:left; width: 74px; height: 74px; padding: 0px; margin: 3px; text-align: center; border: 1px solid #ccc;">
+                    <img id="#id#" src="#src#" width="#width#" height="#height#"
+                         onclick="" style="border: 0px; cursor: pointer;"/></div>
+            </div>
+        </div>
+    </div>
+    <div id="toolbar" style="position: absolute; left: 10px; top: 450px;">
+       <img src="img/rotateleft.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.rotate(-45);"/>
+        <img src="img/rotateright.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.rotate(45);"/>
+         <img src="img/zoomin.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.zoom(0.1);"/>
+         <img src="img/zoomout.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.zoom(-0.1);"/>
+         <img src="img/trash.png" width="30" height="30" style="border: 2px solid black; margin: 3px; float: left;" onclick="javascript:simplomat.product.currentView.currentDesign.remove();"/>
+    </div>
+</div>
+</body>
+</html>

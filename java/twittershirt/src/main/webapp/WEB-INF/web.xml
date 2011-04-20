@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+    <display-name>twittershirt</display-name>
+
+    <servlet>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>com.socialnetworkshirts.twittershirts.web.ImageServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfomatServlet</servlet-name>
+        <servlet-class>com.socialnetworkshirts.twittershirts.web.ConfomatServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>com.socialnetworkshirts.twittershirts.web.OrderServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfomatServlet</servlet-name>
+        <url-pattern>/confomat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/order</url-pattern>
+    </servlet-mapping>
+</web-app>
+
